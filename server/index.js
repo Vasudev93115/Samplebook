@@ -286,7 +286,8 @@ app.post('/api/welcome-user', async (req, res) => {
     console.log(`[${new Date().toISOString()}] Dispatching Welcome WhatsApp message to ${phone}`);
     
     const welcomeMessage = `🎉 *Welcome to SampleBook, ${name}!* \n\n` +
-      `Your account is fully set up and you are logged into your web dashboard!\n\n` +
+      `Your account is fully set up!\n` +
+      `🔗 *Access your dashboard anytime:* https://samplebook-b2c8b.web.app/\n\n` +
       `*How to track cash expenses in this chat:*\n` +
       `💬 *Text:* Send *"200 petrol"* or *"150 auto"*\n` +
       `📷 *Photo:* Snap and send a shop receipt or UPI screenshot\n` +

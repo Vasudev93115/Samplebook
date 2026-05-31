@@ -302,6 +302,56 @@ app.post('/api/welcome-user', async (req, res) => {
   }
 });
 
+// Ensure user exists in public.users (bypasses RLS with service role key)
+// Called by the frontend before creating/joining a group
+app.post('/api/ensure-user', async (req, res) => {
+  try {
+    const { id, phone, name } = req.body;
+    if (!id || !phone) {
+      return res.status(400).json({ error: 'Missing id or phone' });
+    }
+
+    console.log(`[${new Date().toISOString()}] Ensuring user exists: ${id} / ${phone}`);
+
+    // Use service role (bypasses RLS) to upsert user
+    const { supabase } = require('./services/supabase');
+    const { data, error } = await supabase
+      .from('users')
+      .upsert({
+        id,
+        phone: phone.replace(/^\+/, ''),
+        name: name || 'Friend'
+      }, { onConflict: 'id' })
+      .select()
+      .single();
+
+    if (error) {
+      console.warn('ensure-user upsert by id failed:', error.message);
+      // Try by phone conflict instead
+      const { data: data2, error: error2 } = await supabase
+        .from('users')
+        .upsert({
+          id,
+          phone: phone.replace(/^\+/, ''),
+          name: name || 'Friend'
+        }, { onConflict: 'phone' })
+        .select()
+        .single();
+
+      if (error2) {
+        console.error('ensure-user upsert by phone also failed:', error2.message);
+        return res.status(500).json({ error: error2.message });
+      }
+      return res.json({ user: data2 });
+    }
+
+    res.json({ user: data });
+  } catch (err) {
+    console.error('ensure-user error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', app: 'SampleBook', timestamp: new Date().toISOString() });

@@ -2,6 +2,51 @@ import { useState, useEffect, useCallback } from 'react';
 import supabase from '../lib/supabase';
 import { useAuth } from './useAuth';
 
+// Helper to get the backend URL
+function getBackendUrl() {
+  const envUrl = import.meta.env.VITE_APP_URL;
+  if (envUrl && !envUrl.includes('5173')) {
+    return envUrl;
+  }
+  const host = window.location.hostname;
+  const protocol = window.location.protocol;
+  return `${protocol}//${host}:3000`;
+}
+
+// Ensure user exists in public.users via server (bypasses RLS)
+async function ensureUserExists(user) {
+  try {
+    const phone = user.phone || user.user_metadata?.phone;
+    if (!phone) {
+      console.warn('No phone number available for user sync');
+      return;
+    }
+
+    const backendUrl = getBackendUrl();
+    const res = await fetch(`${backendUrl}/api/ensure-user`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: user.id,
+        phone: phone,
+        name: user.user_metadata?.name || 'Friend'
+      })
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      console.error('ensure-user API failed:', errData.error || res.statusText);
+      throw new Error(errData.error || 'Failed to sync user profile');
+    }
+
+    const data = await res.json();
+    console.log('User synced successfully:', data.user?.id);
+  } catch (err) {
+    console.error('ensureUserExists error:', err.message);
+    throw err;
+  }
+}
+
 export function useGroup() {
   const { user, demoMode } = useAuth();
   const [group, setGroup] = useState(null);
@@ -108,30 +153,8 @@ export function useGroup() {
     }
 
     try {
-      // Ensure the authenticated user exists in public.users table first.
-      // The DB trigger may not have synced them, causing a FK violation on groups.created_by.
-      const { error: upsertError } = await supabase
-        .from('users')
-        .upsert({
-          id: user.id,
-          phone: user.phone || user.user_metadata?.phone || 'unknown',
-          name: user.user_metadata?.name || 'Friend'
-        }, { onConflict: 'id' });
-
-      if (upsertError) {
-        console.warn('User upsert warning:', upsertError.message);
-        // Try an alternative: upsert by phone if id conflict fails
-        const phone = user.phone || user.user_metadata?.phone;
-        if (phone) {
-          await supabase
-            .from('users')
-            .upsert({
-              id: user.id,
-              phone: phone,
-              name: user.user_metadata?.name || 'Friend'
-            }, { onConflict: 'phone' });
-        }
-      }
+      // Ensure user exists in public.users via server (bypasses RLS)
+      await ensureUserExists(user);
 
       const { data: newGroup, error: groupError } = await supabase
         .from('groups')
@@ -183,24 +206,8 @@ export function useGroup() {
     }
 
     try {
-      // Ensure the authenticated user exists in public.users table first
-      await supabase
-        .from('users')
-        .upsert({
-          id: user.id,
-          phone: user.phone || user.user_metadata?.phone || 'unknown',
-          name: user.user_metadata?.name || 'Friend'
-        }, { onConflict: 'id' })
-        .then(({ error }) => {
-          if (error) {
-            const phone = user.phone || user.user_metadata?.phone;
-            if (phone) {
-              return supabase
-                .from('users')
-                .upsert({ id: user.id, phone, name: user.user_metadata?.name || 'Friend' }, { onConflict: 'phone' });
-            }
-          }
-        });
+      // Ensure user exists in public.users via server (bypasses RLS)
+      await ensureUserExists(user);
 
       const { data: grp, error: findError } = await supabase
         .from('groups')

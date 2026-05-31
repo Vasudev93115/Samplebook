@@ -108,6 +108,31 @@ export function useGroup() {
     }
 
     try {
+      // Ensure the authenticated user exists in public.users table first.
+      // The DB trigger may not have synced them, causing a FK violation on groups.created_by.
+      const { error: upsertError } = await supabase
+        .from('users')
+        .upsert({
+          id: user.id,
+          phone: user.phone || user.user_metadata?.phone || 'unknown',
+          name: user.user_metadata?.name || 'Friend'
+        }, { onConflict: 'id' });
+
+      if (upsertError) {
+        console.warn('User upsert warning:', upsertError.message);
+        // Try an alternative: upsert by phone if id conflict fails
+        const phone = user.phone || user.user_metadata?.phone;
+        if (phone) {
+          await supabase
+            .from('users')
+            .upsert({
+              id: user.id,
+              phone: phone,
+              name: user.user_metadata?.name || 'Friend'
+            }, { onConflict: 'phone' });
+        }
+      }
+
       const { data: newGroup, error: groupError } = await supabase
         .from('groups')
         .insert({
@@ -158,6 +183,25 @@ export function useGroup() {
     }
 
     try {
+      // Ensure the authenticated user exists in public.users table first
+      await supabase
+        .from('users')
+        .upsert({
+          id: user.id,
+          phone: user.phone || user.user_metadata?.phone || 'unknown',
+          name: user.user_metadata?.name || 'Friend'
+        }, { onConflict: 'id' })
+        .then(({ error }) => {
+          if (error) {
+            const phone = user.phone || user.user_metadata?.phone;
+            if (phone) {
+              return supabase
+                .from('users')
+                .upsert({ id: user.id, phone, name: user.user_metadata?.name || 'Friend' }, { onConflict: 'phone' });
+            }
+          }
+        });
+
       const { data: grp, error: findError } = await supabase
         .from('groups')
         .select('*')

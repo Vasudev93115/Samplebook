@@ -191,11 +191,12 @@ export default function Login() {
       try {
         const { error: updateError } = await supabase
           .from('users')
-          .update({
+          .upsert({
+            id: user.id,
+            phone: user.phone || user.user_metadata?.phone || '',
             name: profileName.trim(),
             avatar_url: JSON.stringify({ gender: profileGender })
-          })
-          .eq('id', user.id);
+          });
 
         if (updateError) {
           setError(updateError.message || 'Failed to update profile. Please try again.');

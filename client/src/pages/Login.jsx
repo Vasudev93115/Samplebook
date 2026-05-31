@@ -30,7 +30,7 @@ export default function Login() {
   // Parse invite code from URL parameters and save to session
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
+    const code = params.get('invite') || params.get('code');
     if (code) {
       sessionStorage.setItem('samplebook_invite_code', code.toUpperCase());
     }

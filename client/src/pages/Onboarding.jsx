@@ -106,7 +106,11 @@ export default function Onboarding() {
 
   const shareOnWhatsApp = () => {
     if (createdGroup) {
-      const text = `Join my SampleBook group "${createdGroup.name}"!\n\nUse invite code: ${createdGroup.invite_code}\n\nTrack expenses effortlessly via WhatsApp 💰`;
+      const dashboardLink = `https://samplebook-b2c8b.web.app/?invite=${createdGroup.invite_code}`;
+      const text = `🎉 Join my SampleBook group "*${createdGroup.name}*"!\n\n` +
+        `📋 *Invite Code:* ${createdGroup.invite_code}\n\n` +
+        `👉 *Click here to join:*\n${dashboardLink}\n\n` +
+        `Track expenses effortlessly via WhatsApp 💰`;
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
   };

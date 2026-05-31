@@ -355,22 +355,71 @@ app.post('/api/ensure-user', async (req, res) => {
       .maybeSingle();
 
     if (existingUserPhone) {
-      // Link ID to the existing phone record, and update name if it was 'Friend'
-      const nameNeedsUpdate = (existingUserPhone.name === 'Friend' || !existingUserPhone.name) && name && name !== 'Friend';
-      const updateData = { id };
-      if (nameNeedsUpdate) updateData.name = name;
+      const oldId = existingUserPhone.id;
+      const finalName = (name && name !== 'Friend') ? name : (existingUserPhone.name || 'Friend');
 
-      const { data: updatedUser, error: updateErr } = await supabase
+      if (oldId !== id) {
+        console.log(`[ENSURE-USER] Migrating old user ID ${oldId} to new authenticated ID ${id}`);
+
+        // 1. Insert new user profile with new authenticated ID first
+        const { error: insertNewErr } = await supabase
+          .from('users')
+          .insert({
+            id: id,
+            phone: cleanPhone,
+            name: finalName,
+            avatar_url: existingUserPhone.avatar_url
+          });
+
+        if (insertNewErr) {
+          console.error('[ENSURE-USER] Error inserting new user row:', insertNewErr.message);
+        }
+
+        // 2. Update group_members references
+        const { error: gmErr } = await supabase
+          .from('group_members')
+          .update({ user_id: id })
+          .eq('user_id', oldId);
+        if (gmErr) {
+          console.error('[ENSURE-USER] Error migrating group_members:', gmErr.message);
+        }
+
+        // 3. Update expenses references
+        const { error: expErr } = await supabase
+          .from('expenses')
+          .update({ user_id: id })
+          .eq('user_id', oldId);
+        if (expErr) {
+          console.error('[ENSURE-USER] Error migrating expenses:', expErr.message);
+        }
+
+        // 4. Delete the old user row
+        const { error: delErr } = await supabase
+          .from('users')
+          .delete()
+          .eq('id', oldId);
+        if (delErr) {
+          console.error('[ENSURE-USER] Error deleting old user row:', delErr.message);
+        }
+      } else {
+        // Just update name if it changed
+        const nameNeedsUpdate = (existingUserPhone.name === 'Friend' || !existingUserPhone.name) && name && name !== 'Friend';
+        if (nameNeedsUpdate) {
+          await supabase
+            .from('users')
+            .update({ name: finalName })
+            .eq('id', id);
+        }
+      }
+
+      // Fetch the final merged user record
+      const { data: finalUser } = await supabase
         .from('users')
-        .update(updateData)
-        .eq('phone', cleanPhone)
-        .select()
+        .select('*')
+        .eq('id', id)
         .single();
 
-      if (!updateErr && updatedUser) {
-        return res.json({ user: updatedUser });
-      }
-      return res.json({ user: existingUserPhone });
+      return res.json({ user: finalUser || { id, phone: cleanPhone, name: finalName } });
     }
 
     // 3. User does not exist. Insert a new record.

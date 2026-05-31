@@ -96,6 +96,7 @@ export function useGroup() {
         const { data: membersData } = await supabase
           .from('group_members')
           .select(`
+            user_id,
             role,
             joined_at,
             users (
@@ -106,7 +107,10 @@ export function useGroup() {
 
         if (membersData) {
           setMembers(membersData.map(m => ({
-            ...m.users,
+            id: m.user_id,
+            ...(m.users || {}),
+            name: m.users?.name || 'Friend',
+            phone: m.users?.phone || '',
             role: m.role,
             joined_at: m.joined_at
           })));

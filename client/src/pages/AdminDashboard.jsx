@@ -416,6 +416,7 @@ function AdminDashboardView({
   demoMode,
   onLogout,
   onAddMember,
+  onDeleteMember,
   onAddBudget,
   onEditBudget,
   onDeleteBudget,
@@ -828,6 +829,7 @@ function AdminDashboardView({
                   <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Role</th>
                   <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">This Month</th>
                   <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Txns</th>
+                  <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -862,6 +864,23 @@ function AdminDashboardView({
                     <td className="px-5 py-3.5 text-right">
                       <span className="text-sm text-gray-600">{m.transaction_count}</span>
                     </td>
+                    <td className="px-5 py-3.5 text-center">
+                      {m.id !== user?.id ? (
+                        <button
+                          onClick={() => {
+                            if (window.confirm(`Are you sure you want to remove ${m.name || 'this member'} from the group?`)) {
+                              onDeleteMember?.(m.id || m.phone);
+                            }
+                          }}
+                          className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-all"
+                          title="Remove Member"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      ) : (
+                        <span className="text-xs text-gray-400 italic">You</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -886,9 +905,24 @@ function AdminDashboardView({
                   </div>
                   <p className="text-xs text-gray-500">{m.phone}</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">{formatCurrency(m.total_spent, currency)}</p>
-                  <p className="text-xs text-gray-500">{m.transaction_count} txns</p>
+                <div className="text-right flex items-center gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{formatCurrency(m.total_spent, currency)}</p>
+                    <p className="text-xs text-gray-500">{m.transaction_count} txns</p>
+                  </div>
+                  {m.id !== user?.id && (
+                    <button
+                      onClick={() => {
+                        if (window.confirm(`Are you sure you want to remove ${m.name || 'this member'} from the group?`)) {
+                          onDeleteMember?.(m.id || m.phone);
+                        }
+                      }}
+                      className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-all"
+                      title="Remove Member"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -1369,6 +1403,45 @@ export default function AdminDashboard() {
     }
   };
 
+  // Delete Member
+  const handleDeleteMember = async (memberId) => {
+    if (!group?.id || !memberId) return;
+
+    if (demoMode) {
+      const demoGroupStr = localStorage.getItem('samplebook_demo_group');
+      if (demoGroupStr) {
+        const demoGroup = JSON.parse(demoGroupStr);
+        demoGroup.members = (demoGroup.members || []).filter(m => m.id !== memberId && m.phone !== memberId);
+        localStorage.setItem('samplebook_demo_group', JSON.stringify(demoGroup));
+        await refreshGroup();
+        toast.addToast('Member removed successfully! (Demo Mode)', 'success');
+      }
+      return;
+    }
+
+    try {
+      if (memberId === user.id) {
+        toast.addToast('You cannot remove yourself from the group!', 'error');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('group_members')
+        .delete()
+        .eq('group_id', group.id)
+        .eq('user_id', memberId);
+
+      if (error) throw error;
+
+      await refreshGroup();
+      await refreshExpenses?.();
+      toast.addToast('Member removed from the group successfully!', 'success');
+    } catch (err) {
+      console.error('Error deleting member:', err);
+      toast.addToast('Failed to remove member. Please try again.', 'error');
+    }
+  };
+
   // Add Budget
   const handleAddBudget = async (budgetData) => {
     if (!group?.id) return;
@@ -1587,6 +1660,7 @@ export default function AdminDashboard() {
       demoMode={demoMode}
       onLogout={handleLogout}
       onAddMember={handleAddMember}
+      onDeleteMember={handleDeleteMember}
       onAddBudget={handleAddBudget}
       onEditBudget={handleEditBudget}
       onDeleteBudget={handleDeleteBudget}

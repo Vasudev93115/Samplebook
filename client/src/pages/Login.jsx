@@ -201,6 +201,11 @@ export default function Login() {
         if (updateError) {
           setError(updateError.message || 'Failed to update profile. Please try again.');
         } else {
+          // Sync name to Supabase Auth metadata so future queries match
+          await supabase.auth.updateUser({
+            data: { name: profileName.trim() }
+          }).catch(err => console.error('Error syncing auth metadata:', err));
+
           toast.addToast('Profile saved successfully! Welcome to SampleBook.');
           
           // Trigger welcome WhatsApp message through the bot!

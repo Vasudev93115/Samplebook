@@ -1951,6 +1951,12 @@ export default function AdminDashboard() {
         .eq('id', user.id);
 
       if (error) throw error;
+      
+      // Sync name to Supabase Auth metadata
+      await supabase.auth.updateUser({
+        data: { name: profileData.name.trim() }
+      }).catch(err => console.error('Error syncing auth metadata:', err));
+
       await refreshGroup();
     } catch (err) {
       console.error('Error updating profile:', err);

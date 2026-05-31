@@ -311,41 +311,85 @@ app.post('/api/ensure-user', async (req, res) => {
       return res.status(400).json({ error: 'Missing id or phone' });
     }
 
-    console.log(`[${new Date().toISOString()}] Ensuring user exists: ${id} / ${phone}`);
+    const cleanPhone = phone.replace(/^\+/, '');
+    console.log(`[${new Date().toISOString()}] Ensuring user exists: ${id} / ${cleanPhone}`);
 
-    // Use service role (bypasses RLS) to upsert user
     const { supabase } = require('./services/supabase');
-    const { data, error } = await supabase
-      .from('users')
-      .upsert({
-        id,
-        phone: phone.replace(/^\+/, ''),
-        name: name || 'Friend'
-      }, { onConflict: 'id' })
-      .select()
-      .single();
 
-    if (error) {
-      console.warn('ensure-user upsert by id failed:', error.message);
-      // Try by phone conflict instead
-      const { data: data2, error: error2 } = await supabase
+    // 1. Check if user exists by ID
+    let { data: existingUser } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (existingUser) {
+      // User exists. Update name/phone only if they are missing or currently 'Friend'
+      const nameNeedsUpdate = (existingUser.name === 'Friend' || !existingUser.name) && name && name !== 'Friend';
+      const phoneNeedsUpdate = !existingUser.phone && cleanPhone;
+
+      if (nameNeedsUpdate || phoneNeedsUpdate) {
+        const updateData = {};
+        if (nameNeedsUpdate) updateData.name = name;
+        if (phoneNeedsUpdate) updateData.phone = cleanPhone;
+
+        const { data: updatedUser, error: updateErr } = await supabase
+          .from('users')
+          .update(updateData)
+          .eq('id', id)
+          .select()
+          .single();
+
+        if (!updateErr && updatedUser) {
+          return res.json({ user: updatedUser });
+        }
+      }
+      return res.json({ user: existingUser });
+    }
+
+    // 2. Check if user exists by phone
+    let { data: existingUserPhone } = await supabase
+      .from('users')
+      .select('*')
+      .eq('phone', cleanPhone)
+      .maybeSingle();
+
+    if (existingUserPhone) {
+      // Link ID to the existing phone record, and update name if it was 'Friend'
+      const nameNeedsUpdate = (existingUserPhone.name === 'Friend' || !existingUserPhone.name) && name && name !== 'Friend';
+      const updateData = { id };
+      if (nameNeedsUpdate) updateData.name = name;
+
+      const { data: updatedUser, error: updateErr } = await supabase
         .from('users')
-        .upsert({
-          id,
-          phone: phone.replace(/^\+/, ''),
-          name: name || 'Friend'
-        }, { onConflict: 'phone' })
+        .update(updateData)
+        .eq('phone', cleanPhone)
         .select()
         .single();
 
-      if (error2) {
-        console.error('ensure-user upsert by phone also failed:', error2.message);
-        return res.status(500).json({ error: error2.message });
+      if (!updateErr && updatedUser) {
+        return res.json({ user: updatedUser });
       }
-      return res.json({ user: data2 });
+      return res.json({ user: existingUserPhone });
     }
 
-    res.json({ user: data });
+    // 3. User does not exist. Insert a new record.
+    const { data: newUser, error: insertErr } = await supabase
+      .from('users')
+      .insert({
+        id,
+        phone: cleanPhone,
+        name: name || 'Friend'
+      })
+      .select()
+      .single();
+
+    if (insertErr) {
+      console.error('Error inserting new user:', insertErr.message);
+      return res.status(500).json({ error: insertErr.message });
+    }
+
+    res.json({ user: newUser });
   } catch (err) {
     console.error('ensure-user error:', err.message);
     res.status(500).json({ error: err.message });

@@ -158,6 +158,12 @@ export default function MemberDashboard() {
         .eq('id', user.id);
 
       if (error) throw error;
+      
+      // Sync name to Supabase Auth metadata
+      await supabase.auth.updateUser({
+        data: { name: profileData.name.trim() }
+      }).catch(err => console.error('Error syncing auth metadata:', err));
+
       await refreshGroup();
     } catch (err) {
       console.error('Error updating profile:', err);
@@ -380,7 +386,7 @@ export default function MemberDashboard() {
                         {expense.category}
                       </span>
                       <span className="text-[11px] text-ink-muted">
-                        {new Date(expense.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        {new Date(expense.created_at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true })}
                       </span>
                     </div>
                   </div>
@@ -391,25 +397,6 @@ export default function MemberDashboard() {
               ))}
             </div>
           )}
-        </div>
-
-        {/* WhatsApp CTA */}
-        <div className="mt-6 bg-gradient-to-br from-[#25D366] to-[#128C7E] rounded-2xl p-5 text-white">
-          <div className="flex items-center gap-2 mb-2">
-            <MessageCircle className="w-5 h-5" />
-            <h3 className="text-sm font-bold">Log via WhatsApp</h3>
-          </div>
-          <p className="text-white/80 text-xs mb-4 leading-relaxed">
-            Send expenses as text messages or photo receipts to the SampleBook bot.
-          </p>
-          <a
-            href="https://wa.me/919999999999?text=Hi"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full text-center px-4 py-2.5 bg-white text-[#25D366] font-semibold text-sm rounded-xl hover:bg-gray-50 transition-colors"
-          >
-            Open WhatsApp →
-          </a>
         </div>
       </main>
 

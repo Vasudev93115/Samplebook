@@ -1,0 +1,30 @@
+# Dependency directories
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Local env files (security safeguard)
+.env
+.env.local
+.env.production
+.env.development
+.env.staging
+client/.env
+server/.env
+
+# Build outputs
+dist/
+client/dist/
+build/
+
+# System and logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.DS_Store
+Thumbs.db
+desktop.ini
+.antigravity/
+.antigravity-ide/
+.gemini/

@@ -1,0 +1,475 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --green: #1a6b47;
+  --green-mid: #2d9462;
+  --green-light: #e8f5ee;
+  --red: #dc2626;
+  --orange: #ea580c;
+  --ink: #111827;
+  --ink-soft: #374151;
+  --ink-muted: #6b7280;
+  --paper: #f3f4f6;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Toast slide in */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.toast-enter {
+  animation: slideInRight 0.3s ease forwards;
+}
+
+.toast-exit {
+  animation: slideOutRight 0.3s ease forwards;
+}
+
+/* Slide panel */
+@keyframes slideInFromRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.slide-panel {
+  animation: slideInFromRight 0.3s ease forwards;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Progress bar colors */
+.progress-green { background-color: #2d9462; }
+.progress-orange { background-color: #ea580c; }
+.progress-red { background-color: #dc2626; }
+
+/* Dark Mode Theme overrides */
+.dark {
+  --ink: #f1f5f9;
+  --ink-soft: #cbd5e1;
+  --ink-muted: #94a3b8;
+  --paper: #0b1120;
+  --card: #111827;
+  --border: #1e293b;
+  --green-light: #0d2b1e;
+  background-color: #0b1120;
+  color: #f1f5f9;
+}
+
+.dark body {
+  background-color: #0b1120;
+  color: #f1f5f9;
+}
+
+/* ==========================================
+   SURFACE OVERRIDES (bg-white, bg-gray-*)
+   ========================================== */
+.dark .bg-white {
+  background-color: var(--card) !important;
+}
+.dark .bg-paper,
+.dark .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+.dark .bg-gray-50\/30 {
+  background-color: rgba(15, 23, 42, 0.3) !important;
+}
+.dark .bg-gray-50\/60 {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+}
+.dark .bg-gray-100 {
+  background-color: #1e293b !important;
+  color: var(--ink-soft) !important;
+}
+.dark .bg-gray-200 {
+  background-color: #1e293b !important;
+}
+
+/* ==========================================
+   TEXT COLOR OVERRIDES
+   ========================================== */
+.dark .text-ink { color: #f1f5f9 !important; }
+.dark .text-gray-900 { color: #f1f5f9 !important; }
+.dark .text-gray-800 { color: #e2e8f0 !important; }
+.dark .text-gray-700 { color: #cbd5e1 !important; }
+.dark .text-gray-600 { color: #cbd5e1 !important; }
+.dark .text-gray-500 { color: #94a3b8 !important; }
+.dark .text-gray-400 { color: #94a3b8 !important; }
+
+/* ==========================================
+   BORDER OVERRIDES
+   ========================================== */
+.dark .border-border,
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: #1e293b !important;
+}
+.dark .border-b {
+  border-color: #1e293b !important;
+}
+.dark .divide-gray-50 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1e293b !important;
+}
+
+/* Green-tinted borders for onboarding cards */
+.dark .border-green\/20 {
+  border-color: rgba(45, 148, 98, 0.25) !important;
+}
+
+/* ==========================================
+   HOVER STATE OVERRIDES
+   ========================================== */
+.dark .hover\:bg-gray-50:hover {
+  background-color: #1e293b !important;
+}
+.dark .hover\:bg-gray-200:hover {
+  background-color: #2e3748 !important;
+}
+.dark .hover\:bg-emerald-50\/30:hover {
+  background-color: rgba(45, 148, 98, 0.12) !important;
+}
+.dark .hover\:bg-emerald-50\/40:hover {
+  background-color: rgba(45, 148, 98, 0.15) !important;
+}
+
+/* ==========================================
+   FILL OVERRIDES (SVGs, Charts)
+   ========================================== */
+.dark .fill-gray-900 { fill: #f1f5f9 !important; }
+.dark .fill-gray-400 { fill: #94a3b8 !important; }
+
+/* ==========================================
+   SKELETON SHIMMER (dark mode)
+   ========================================== */
+.dark .skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #111827 50%, #1e293b 75%) !important;
+  background-size: 200% 100% !important;
+}
+
+/* ==========================================
+   FORM INPUTS, SELECTS, TEXTAREAS
+   ========================================== */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+  border-color: #2d3a4f !important;
+}
+
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #2d9462 !important;
+  box-shadow: 0 0 0 3px rgba(45, 148, 98, 0.2) !important;
+}
+
+.dark ::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+/* Date picker calendar icon */
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(0.85);
+  cursor: pointer;
+}
+
+/* Select options */
+.dark select option {
+  background-color: #111827 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Radio buttons */
+.dark input[type="radio"] {
+  accent-color: #2d9462;
+}
+
+/* ==========================================
+   DISABLED BUTTONS — Premium Dark Styling
+   ========================================== */
+.dark .disabled\:bg-gray-300:disabled,
+.dark button:disabled {
+  background-color: #1e293b !important;
+  color: #475569 !important;
+  border-color: #1e293b !important;
+}
+
+/* ==========================================
+   ALERT / NOTIFICATION BOXES
+   ========================================== */
+/* Red error alerts */
+.dark .bg-red-50 {
+  background-color: rgba(220, 38, 38, 0.12) !important;
+}
+.dark .border-red-200 {
+  border-color: rgba(220, 38, 38, 0.3) !important;
+}
+.dark .text-red-600 {
+  color: #fca5a5 !important;
+}
+
+/* Amber/warning alerts */
+.dark .bg-amber-50 {
+  background-color: rgba(217, 119, 6, 0.1) !important;
+}
+.dark .border-amber-200 {
+  border-color: rgba(217, 119, 6, 0.3) !important;
+}
+.dark .text-amber-700 {
+  color: #fbbf24 !important;
+}
+
+/* Emerald success/info alerts */
+.dark .bg-emerald-50 {
+  background-color: rgba(22, 163, 74, 0.12) !important;
+}
+.dark .bg-emerald-50\/40 {
+  background-color: rgba(22, 163, 74, 0.1) !important;
+  border-color: rgba(52, 211, 153, 0.25) !important;
+}
+.dark .border-emerald-200 {
+  border-color: rgba(52, 211, 153, 0.25) !important;
+}
+.dark .text-emerald-800 {
+  color: #6ee7b7 !important;
+}
+.dark .text-emerald-700 {
+  color: #a7f3d0 !important;
+}
+.dark .text-emerald-600 {
+  color: #34d399 !important;
+}
+
+/* Green-light background used in onboarding cards */
+.dark .bg-green-light {
+  background-color: #0d2b1e !important;
+}
+
+/* ==========================================
+   ONBOARDING PAGE — Card Surfaces
+   ========================================== */
+/* Join card and form cards with white bg in light mode */
+.dark .bg-white.border-2 {
+  background-color: #111827 !important;
+  border-color: #1e3a2d !important;
+}
+
+/* Currency dropdown menu overlay */
+.dark .shadow-lg {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Group type toggle — unselected state */
+.dark .border-border.text-ink-muted {
+  border-color: #2d3a4f !important;
+  color: #94a3b8 !important;
+}
+
+/* Group type toggle — selected state */
+.dark .border-green.bg-green-light.text-green {
+  background-color: rgba(45, 148, 98, 0.15) !important;
+  border-color: #2d9462 !important;
+  color: #4ade80 !important;
+}
+
+/* ==========================================
+   HEADER in dark mode
+   ========================================== */
+.dark header.bg-white,
+.dark .bg-white.border-b {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+/* ==========================================
+   SCROLLBAR (dark)
+   ========================================== */
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0b1120;
+}
+
+/* ==========================================
+   PROGRESS BAR COLORS (dark-safe)
+   ========================================== */
+.dark .progress-green { background-color: #2d9462; }
+.dark .progress-orange { background-color: #f97316; }
+.dark .progress-red { background-color: #ef4444; }
+
+/* ==========================================
+   MODAL / PANEL OVERLAYS
+   ========================================== */
+.dark .bg-black\/40 {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ==========================================
+   TABLE ROW HOVER
+   ========================================== */
+.dark tr:hover {
+  background-color: #1e293b !important;
+}
+.dark thead {
+  background-color: #0f172a !important;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE OVERRIDES
+   ========================================== */
+
+/* Fix missing animation class used in MemberCard */
+@keyframes slidePanelEnter {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.slide-panel-enter {
+  animation: slidePanelEnter 0.3s ease forwards;
+}
+
+/* Safe area support for notched devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Mobile-first responsive adjustments */
+@media (max-width: 640px) {
+  /* Tighter padding on summary cards */
+  .summary-card {
+    padding: 16px;
+  }
+  
+  /* Prevent text overflow in currency displays */
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  /* Make modals edge-to-edge on small phones */
+  .fixed.inset-0 .max-w-md,
+  .fixed.inset-0 .max-w-sm {
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  /* Compact filter bar */
+  .min-w-\[220px\] {
+    min-width: 0 !important;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Even tighter on very small screens */
+  .text-3xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-4xl {
+    font-size: 1.75rem !important;
+  }
+  
+  /* Stack 2-col grids to 1-col on tiny screens */
+  .grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Touch device support — show hover-only elements always on touch */
+@media (hover: none) and (pointer: coarse) {
+  .opacity-0.group-hover\:opacity-100 {
+    opacity: 1 !important;
+  }
+  
+  .group:hover .group-hover\:opacity-100 {
+    opacity: 1 !important;
+  }
+}
+

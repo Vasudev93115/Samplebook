@@ -159,14 +159,35 @@ export default function Login() {
       return;
     }
 
-    const { error: verifyError } = await verifyOtp(fullPhone, code);
+    const { data: verifyData, error: verifyError } = await verifyOtp(fullPhone, code);
 
     if (verifyError) {
       setError(verifyError.message || 'Invalid OTP. Please try again.');
       setOtp(['', '', '', '', '', '']);
       otpRefs[0]?.current?.focus();
     } else {
-      setProfileSetupStep(true);
+      const loggedUser = verifyData?.user;
+      if (loggedUser && !demoMode) {
+        try {
+          const { data: dbUser } = await supabase
+            .from('users')
+            .select('name')
+            .eq('id', loggedUser.id)
+            .maybeSingle();
+
+          if (dbUser && dbUser.name && dbUser.name !== 'Friend') {
+            // User already exists and has a set profile name, skip profile setup!
+            setProfileSetupStep(false);
+          } else {
+            setProfileSetupStep(true);
+          }
+        } catch (err) {
+          console.error('Error checking user profile:', err);
+          setProfileSetupStep(true);
+        }
+      } else {
+        setProfileSetupStep(true);
+      }
     }
     setOtpVerifying(false);
   }, [phone, otp, verifyOtp]);

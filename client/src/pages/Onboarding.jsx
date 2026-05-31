@@ -22,7 +22,14 @@ const CURRENCIES = [
 export default function Onboarding() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  const { createGroup, joinGroup } = useGroup();
+  const { group, role, loading: groupLoading, createGroup, joinGroup } = useGroup();
+
+  // Redirect if already has a group
+  useEffect(() => {
+    if (group && !groupLoading) {
+      navigate(role === 'admin' ? '/dashboard' : '/member', { replace: true });
+    }
+  }, [group, role, groupLoading, navigate]);
 
   const [activeCard, setActiveCard] = useState(null); // 'create' | 'join' | null
   const [step, setStep] = useState('choice'); // 'choice' | 'form' | 'success'

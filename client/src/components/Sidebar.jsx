@@ -37,8 +37,25 @@ export default function Sidebar({
   group,
   user,
   onLogout,
+  role = 'admin',
 }) {
   const [collapsed, setCollapsed] = useState(false);
+
+  const filteredNavItems = role === 'member'
+    ? navItems.filter(item => item.id !== 'members')
+    : navItems;
+
+  let photoUrl = '';
+  try {
+    if (user?.avatar_url) {
+      const meta = JSON.parse(user.avatar_url);
+      photoUrl = meta?.photo_url || '';
+    }
+  } catch (e) {
+    if (user?.avatar_url && user.avatar_url.startsWith('http')) {
+      photoUrl = user.avatar_url;
+    }
+  }
 
   return (
     <>
@@ -86,7 +103,7 @@ export default function Sidebar({
 
         {/* Nav Links */}
         <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
-          {navItems.map((item) => {
+          {filteredNavItems.map((item) => {
             const isActive = activeTab === item.id;
             const Icon = item.icon;
             return (
@@ -129,11 +146,20 @@ export default function Sidebar({
         {/* User Section */}
         <div className="border-t border-gray-100 px-4 py-4">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-              <span className="text-xs font-bold text-emerald-700">
-                {getInitials(user?.name)}
-              </span>
-            </div>
+            {photoUrl ? (
+              <img
+                src={photoUrl}
+                alt={user?.name || 'User'}
+                className="w-9 h-9 rounded-full object-cover flex-shrink-0"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                <span className="text-xs font-bold text-emerald-700">
+                  {getInitials(user?.name)}
+                </span>
+              </div>
+            )}
             {!collapsed && (
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 truncate">
@@ -160,7 +186,7 @@ export default function Sidebar({
       {/* Mobile Bottom Tab Bar */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 px-1" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <div className="flex items-center justify-around h-16">
-          {mobileNavItems.map((item) => {
+          {filteredNavItems.map((item) => {
             const isActive = activeTab === item.id;
             const Icon = item.icon;
             return (
@@ -191,11 +217,20 @@ export default function Sidebar({
           <span className="text-base font-bold text-gray-900">SampleBook</span>
         </div>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
-            <span className="text-[10px] font-bold text-emerald-700">
-              {getInitials(user?.name)}
-            </span>
-          </div>
+          {photoUrl ? (
+            <img
+              src={photoUrl}
+              alt={user?.name || 'User'}
+              className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+              <span className="text-[10px] font-bold text-emerald-700">
+                {getInitials(user?.name)}
+              </span>
+            </div>
+          )}
           <button
             onClick={onLogout}
             className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 transition-colors"

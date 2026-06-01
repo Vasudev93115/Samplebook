@@ -26,10 +26,14 @@ app.use((req, res, next) => {
 
 function buildSuccessReply(expense, currency) {
   const sym = currencySymbol[currency] || currency;
+  const isCredit = expense.transaction_type === 'credit';
+  const prefix = isCredit ? '➕ ' : '✅ ';
+  const label = isCredit ? ' Cash-In' : ' Cash-Out';
+  
   if (expense.confidence >= 0.7) {
-    return `✅ ${sym}${expense.amount} logged\n📂 ${expense.category} — ${expense.description}\n\nReply *report* for monthly summary`;
+    return `${prefix}${sym}${expense.amount}${label} logged\n📂 ${expense.category} — ${expense.description}\n\nReply *report* for monthly summary`;
   } else {
-    return `🤔 Logged ${sym}${expense.amount} as ${expense.category}\nNot 100% sure — does this look right?`;
+    return `🤔 Logged ${sym}${expense.amount} as ${expense.category} (${isCredit ? 'Cash-In' : 'Cash-Out'})\nNot 100% sure — does this look right?`;
   }
 }
 

@@ -288,8 +288,8 @@ export default function ExpenseTable({
                   </span>
                 </td>
                 <td className="px-5 py-3.5 text-right">
-                  <span className="text-sm font-semibold text-gray-900">
-                    {formatCurrency(expense.amount, currency)}
+                  <span className={`text-sm font-semibold ${expense.transaction_type === 'credit' ? 'text-emerald-600' : 'text-gray-900'}`}>
+                    {expense.transaction_type === 'credit' ? '+ ' : ''}{formatCurrency(expense.amount, currency)}
                   </span>
                 </td>
                 <td className="px-5 py-3.5">
@@ -328,8 +328,8 @@ export default function ExpenseTable({
               </p>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="text-sm font-semibold text-gray-900">
-                {formatCurrency(expense.amount, currency)}
+              <p className={`text-sm font-semibold ${expense.transaction_type === 'credit' ? 'text-emerald-600' : 'text-gray-900'}`}>
+                {expense.transaction_type === 'credit' ? '+ ' : ''}{formatCurrency(expense.amount, currency)}
               </p>
               <div className="mt-0.5 flex justify-end">
                 {getSourceIcon(expense.source)}

@@ -41,6 +41,7 @@ async function handleAudio(from, mediaId, mimeType, group, user) {
         category: item.category || 'Other',
         description: item.description || 'Expense',
         input_type: 'audio',
+        transaction_type: item.transaction_type || 'debit',
         confidence: item.confidence
       });
       if (saved) {

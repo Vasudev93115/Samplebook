@@ -89,7 +89,7 @@ export default function CategoryDonut({
     const catMap = {};
     let totalAmt = 0;
 
-    expenses.forEach(exp => {
+    expenses.filter(exp => exp.transaction_type !== 'credit').forEach(exp => {
       const cat = (exp.category || 'other').toLowerCase();
       catMap[cat] = (catMap[cat] || 0) + (exp.amount || 0);
       totalAmt += exp.amount || 0;

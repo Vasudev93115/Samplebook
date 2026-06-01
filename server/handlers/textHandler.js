@@ -25,6 +25,7 @@ async function handleText(from, text, group, user) {
         category: item.category || 'Other',
         description: item.description || 'Expense',
         input_type: 'text',
+        transaction_type: item.transaction_type || 'debit',
         confidence: item.confidence
       });
       if (saved) {

@@ -62,7 +62,7 @@ export default function SpendingTrend({
       });
     });
 
-    expenses.forEach(exp => {
+    expenses.filter(exp => exp.transaction_type !== 'credit').forEach(exp => {
       if (!exp.created_at) return;
       const d = format(startOfDay(new Date(exp.created_at)), 'yyyy-MM-dd');
       const memberId = exp.member_id || exp.member_phone;

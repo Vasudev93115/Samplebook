@@ -12,6 +12,8 @@ import {
   Receipt,
   Award,
   Download,
+  TrendingUp,
+  TrendingDown,
 } from 'lucide-react';
 import { isThisMonth, format } from 'date-fns';
 
@@ -118,13 +120,24 @@ export default function MemberDashboard() {
     return formattedExpenses.filter(e => e.created_at && isThisMonth(new Date(e.created_at)));
   }, [formattedExpenses]);
 
-  const totalSpent = useMemo(() => {
-    return thisMonthExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
-  }, [thisMonthExpenses]);
+  const totalCashIn = useMemo(
+    () => thisMonthExpenses.filter(e => e.transaction_type === 'credit').reduce((s, e) => s + Number(e.amount || 0), 0),
+    [thisMonthExpenses]
+  );
+
+  const totalSpent = useMemo(
+    () => thisMonthExpenses.filter(e => e.transaction_type !== 'credit').reduce((s, e) => s + Number(e.amount || 0), 0),
+    [thisMonthExpenses]
+  );
+
+  const netBalance = useMemo(
+    () => totalCashIn - totalSpent,
+    [totalCashIn, totalSpent]
+  );
 
   const highestCategory = useMemo(() => {
     const cats = {};
-    thisMonthExpenses.forEach(e => {
+    thisMonthExpenses.filter(e => e.transaction_type !== 'credit').forEach(e => {
       cats[e.category] = (cats[e.category] || 0) + Number(e.amount);
     });
     const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
@@ -160,9 +173,9 @@ export default function MemberDashboard() {
 
   const formattedBudgets = useMemo(() => {
     return budgets.map(b => {
-      // Calculate my spend in this category
+      // Calculate my spend in this category (excluding credits)
       const categorySpend = thisMonthExpenses
-        .filter(e => e.category === b.category)
+        .filter(e => e.category === b.category && e.transaction_type !== 'credit')
         .reduce((sum, e) => sum + Number(e.amount), 0);
       return {
         ...b,
@@ -188,6 +201,7 @@ export default function MemberDashboard() {
           category: expenseData.category,
           description: expenseData.description,
           input_type: 'web',
+          transaction_type: expenseData.transaction_type || 'debit',
           created_at: expenseData.created_at || new Date().toISOString()
         })
         .select('*, users(name, phone)')
@@ -196,11 +210,11 @@ export default function MemberDashboard() {
       if (error) throw error;
       if (data) {
         addExpense(data);
-        toast.addToast('Expense added successfully!', 'success');
+        toast.addToast('Transaction recorded successfully!', 'success');
       }
     } catch (err) {
-      console.error('Error adding expense:', err);
-      toast.addToast('Failed to add expense.', 'error');
+      console.error('Error adding transaction:', err);
+      toast.addToast('Failed to record transaction.', 'error');
     }
   };
 
@@ -318,12 +332,30 @@ export default function MemberDashboard() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <SummaryCard
-          icon={DollarSign}
-          title="My Spent (This Month)"
-          value={formatCurrency(totalSpent, group?.currency)}
-          subtitle={`${totalTransactions} transactions`}
+          icon={TrendingUp}
+          title="My Cash-In (Income)"
+          value={formatCurrency(totalCashIn, group?.currency)}
+          subtitle="This month"
           iconBg="bg-emerald-50 dark:bg-emerald-950/20"
           iconColor="text-emerald-600 dark:text-emerald-400"
+          loading={expensesLoading}
+        />
+        <SummaryCard
+          icon={TrendingDown}
+          title="My Cash-Out (Expenses)"
+          value={formatCurrency(totalSpent, group?.currency)}
+          subtitle={`${thisMonthExpenses.filter(e => e.transaction_type !== 'credit').length} transactions`}
+          iconBg="bg-rose-50 dark:bg-rose-950/20"
+          iconColor="text-rose-600 dark:text-rose-400"
+          loading={expensesLoading}
+        />
+        <SummaryCard
+          icon={Wallet}
+          title="My Net Balance"
+          value={formatCurrency(netBalance, group?.currency)}
+          subtitle={netBalance >= 0 ? "Positive Pool" : "Overspent Pool"}
+          iconBg={netBalance >= 0 ? "bg-emerald-50 dark:bg-emerald-950/20" : "bg-rose-50 dark:bg-rose-950/20"}
+          iconColor={netBalance >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}
           loading={expensesLoading}
         />
         <SummaryCard
@@ -334,24 +366,6 @@ export default function MemberDashboard() {
           iconBg="bg-amber-50 dark:bg-amber-950/20"
           iconColor="text-amber-600 dark:text-amber-400"
           loading={expensesLoading}
-        />
-        <SummaryCard
-          icon={Receipt}
-          title="My Transactions"
-          value={expensesLoading ? '—' : totalTransactions.toLocaleString()}
-          subtitle="This month"
-          iconBg="bg-blue-50 dark:bg-blue-950/20"
-          iconColor="text-blue-600 dark:text-blue-400"
-          loading={expensesLoading}
-        />
-        <SummaryCard
-          icon={Target}
-          title="Active Group Budgets"
-          value={budgetsLoading ? '—' : `${budgets.length}`}
-          subtitle="Monitored categories"
-          iconBg="bg-purple-50 dark:bg-purple-950/20"
-          iconColor="text-purple-600 dark:text-purple-400"
-          loading={budgetsLoading}
         />
       </div>
 

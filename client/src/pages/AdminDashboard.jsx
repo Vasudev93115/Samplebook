@@ -22,6 +22,9 @@ import {
   Target,
   ChevronRight,
   MessageCircle,
+  TrendingUp,
+  TrendingDown,
+  Wallet,
 } from 'lucide-react';
 import { format, isThisMonth } from 'date-fns';
 
@@ -486,14 +489,24 @@ function AdminDashboardView({
     [expenses]
   );
 
-  const totalSpent = useMemo(
-    () => thisMonthExpenses.reduce((s, e) => s + (e.amount || 0), 0),
+  const totalCashIn = useMemo(
+    () => thisMonthExpenses.filter(e => e.transaction_type === 'credit').reduce((s, e) => s + Number(e.amount || 0), 0),
     [thisMonthExpenses]
+  );
+
+  const totalSpent = useMemo(
+    () => thisMonthExpenses.filter(e => e.transaction_type !== 'credit').reduce((s, e) => s + Number(e.amount || 0), 0),
+    [thisMonthExpenses]
+  );
+
+  const netBalance = useMemo(
+    () => totalCashIn - totalSpent,
+    [totalCashIn, totalSpent]
   );
 
   const highestSpender = useMemo(() => {
     const map = {};
-    thisMonthExpenses.forEach(e => {
+    thisMonthExpenses.filter(e => e.transaction_type !== 'credit').forEach(e => {
       const key = e.member_name || e.member_id || 'Unknown';
       map[key] = (map[key] || 0) + (e.amount || 0);
     });
@@ -512,7 +525,7 @@ function AdminDashboardView({
   // Spending by category for budgets
   const spendingByCategory = useMemo(() => {
     const map = {};
-    thisMonthExpenses.forEach(e => {
+    thisMonthExpenses.filter(e => e.transaction_type !== 'credit').forEach(e => {
       const cat = (e.category || 'other').toLowerCase();
       map[cat] = (map[cat] || 0) + (e.amount || 0);
     });
@@ -607,12 +620,30 @@ function AdminDashboardView({
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <SummaryCard
-          icon={DollarSign}
-          title="Total Spent (This Month)"
-          value={formatCurrency(totalSpent, currency)}
-          subtitle={`${thisMonthExpenses.length} transactions`}
+          icon={TrendingUp}
+          title="Total Cash-In (Income)"
+          value={formatCurrency(totalCashIn, currency)}
+          subtitle="This month"
           iconBg="bg-emerald-50"
           iconColor="text-emerald-600"
+          loading={loading}
+        />
+        <SummaryCard
+          icon={TrendingDown}
+          title="Total Cash-Out (Expenses)"
+          value={formatCurrency(totalSpent, currency)}
+          subtitle={`${thisMonthExpenses.filter(e => e.transaction_type !== 'credit').length} transactions`}
+          iconBg="bg-rose-50"
+          iconColor="text-rose-600"
+          loading={loading}
+        />
+        <SummaryCard
+          icon={Wallet}
+          title="Net Balance"
+          value={formatCurrency(netBalance, currency)}
+          subtitle={netBalance >= 0 ? "Positive Pool" : "Overspent Pool"}
+          iconBg={netBalance >= 0 ? "bg-emerald-50" : "bg-rose-50"}
+          iconColor={netBalance >= 0 ? "text-emerald-600" : "text-rose-600"}
           loading={loading}
         />
         <SummaryCard
@@ -622,24 +653,6 @@ function AdminDashboardView({
           subtitle={highestSpender ? formatCurrency(highestSpender.amount, currency) : 'No data'}
           iconBg="bg-amber-50"
           iconColor="text-amber-600"
-          loading={loading}
-        />
-        <SummaryCard
-          icon={Receipt}
-          title="Total Transactions"
-          value={loading ? '—' : thisMonthExpenses.length.toLocaleString()}
-          subtitle="This month"
-          iconBg="bg-blue-50"
-          iconColor="text-blue-600"
-          loading={loading}
-        />
-        <SummaryCard
-          icon={Users}
-          title="Active Members"
-          value={loading ? '—' : `${activeMembers} of ${members.length}`}
-          subtitle="Logged expenses this month"
-          iconBg="bg-purple-50"
-          iconColor="text-purple-600"
           loading={loading}
         />
       </div>
@@ -1535,6 +1548,7 @@ export default function AdminDashboard() {
         category: expenseData.category,
         description: expenseData.description,
         input_type: 'text',
+        transaction_type: expenseData.transaction_type || 'debit',
         confidence: 1.0,
         created_at: expenseData.created_at || new Date().toISOString(),
         users: {
@@ -1558,6 +1572,7 @@ export default function AdminDashboard() {
           category: expenseData.category,
           description: expenseData.description,
           input_type: 'text',
+          transaction_type: expenseData.transaction_type || 'debit',
           confidence: 1.0,
           created_at: expenseData.created_at
         })

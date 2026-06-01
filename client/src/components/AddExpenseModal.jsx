@@ -11,6 +11,8 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
   const [userId, setUserId] = useState('');
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
 
+  const [transactionType, setTransactionType] = useState('debit');
+
   const [scanning, setScanning] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   
@@ -28,6 +30,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
       setAmount('');
       setCategory('Other');
       setDescription('');
+      setTransactionType('debit');
       setDate(format(new Date(), 'yyyy-MM-dd'));
       setSelectedFile(null);
       setScanning(false);
@@ -96,6 +99,9 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
               }
               if (item.description) {
                 setDescription(item.description);
+              }
+              if (item.transaction_type) {
+                setTransactionType(item.transaction_type);
               }
               
               if (expenses.length > 1) {
@@ -210,6 +216,9 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
               if (item.description) {
                 setDescription(item.description);
               }
+              if (item.transaction_type) {
+                setTransactionType(item.transaction_type);
+              }
               
               if (expenses.length > 1) {
                 toast.addToast(`✅ Voice note parsed! Found ${expenses.length} expenses. First one filled below.`);
@@ -251,6 +260,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
       category,
       description,
       userId,
+      transaction_type: transactionType,
       created_at: chosenDate.toISOString(),
     });
     onClose();
@@ -268,7 +278,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
             <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
               <Plus size={20} className="text-emerald-600" />
             </div>
-            <h2 className="text-lg font-bold text-gray-900">Add Expense</h2>
+            <h2 className="text-lg font-bold text-gray-900">{transactionType === 'credit' ? 'Add Income (Cash-In)' : 'Add Expense (Cash-Out)'}</h2>
           </div>
           <button
             onClick={onClose}
@@ -280,6 +290,32 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
+          {/* Segmented Control: Expense vs Income */}
+          <div className="bg-gray-100 p-1 rounded-xl flex gap-1 border border-gray-200/50">
+            <button
+              type="button"
+              onClick={() => setTransactionType('debit')}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                transactionType === 'debit'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Expense (Cash-Out)
+            </button>
+            <button
+              type="button"
+              onClick={() => setTransactionType('credit')}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                transactionType === 'credit'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Income (Cash-In)
+            </button>
+          </div>
+
           {/* Receipt/Image Scanner Section */}
           <div className="bg-emerald-50/40 rounded-xl p-4 border border-dashed border-emerald-200">
             <div className="flex items-center gap-2 mb-2">

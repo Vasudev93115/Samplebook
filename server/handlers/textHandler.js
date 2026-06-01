@@ -7,22 +7,32 @@ async function handleText(from, text, group, user) {
     if (!result) {
       return { success: false, reason: 'parse_failed' };
     }
-    if (result.confidence < 0.5) {
+
+    const expensesList = Array.isArray(result) ? result : [result];
+    const validExpenses = expensesList.filter(e => e && e.amount > 0 && e.confidence >= 0.5);
+
+    if (validExpenses.length === 0) {
       return { success: false, reason: 'low_confidence' };
     }
 
-    await saveExpense({
-      group_id: group.group_id,
-      user_id: user.id,
-      amount: result.amount,
-      currency: group.currency || 'INR',
-      category: result.category,
-      description: result.description,
-      input_type: 'text',
-      confidence: result.confidence
-    });
+    const savedExpenses = [];
+    for (const item of validExpenses) {
+      const saved = await saveExpense({
+        group_id: group.group_id,
+        user_id: user.id,
+        amount: item.amount,
+        currency: group.currency || 'INR',
+        category: item.category || 'Other',
+        description: item.description || 'Expense',
+        input_type: 'text',
+        confidence: item.confidence
+      });
+      if (saved) {
+        savedExpenses.push(saved);
+      }
+    }
 
-    return { success: true, expense: result };
+    return { success: true, expenses: savedExpenses };
   } catch (err) {
     console.error('handleText error:', err.message);
     return { success: false, reason: 'error' };

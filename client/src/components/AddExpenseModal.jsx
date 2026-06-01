@@ -85,16 +85,24 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
 
           if (response.ok) {
             const parsed = await response.json();
-            if (parsed && parsed.amount) {
-              setAmount(parsed.amount.toString());
-              if (parsed.category) {
-                const matchedCategory = categories.find(c => c.toLowerCase() === parsed.category.toLowerCase()) || 'Other';
+            const expenses = Array.isArray(parsed) ? parsed : (parsed && parsed.amount ? [parsed] : []);
+            
+            if (expenses.length > 0) {
+              const item = expenses[0];
+              setAmount(item.amount.toString());
+              if (item.category) {
+                const matchedCategory = categories.find(c => c.toLowerCase() === item.category.toLowerCase()) || 'Other';
                 setCategory(matchedCategory);
               }
-              if (parsed.description) {
-                setDescription(parsed.description);
+              if (item.description) {
+                setDescription(item.description);
               }
-              toast.addToast('✅ Receipt scanned successfully! Details filled below.');
+              
+              if (expenses.length > 1) {
+                toast.addToast(`✅ Receipt scanned! Found ${expenses.length} expenses. First one filled below.`);
+              } else {
+                toast.addToast('✅ Receipt scanned successfully! Details filled below.');
+              }
             } else {
               toast.addToast('❓ Could not extract details. Please fill manually.');
             }
@@ -190,16 +198,24 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
 
           if (response.ok) {
             const parsed = await response.json();
-            if (parsed && parsed.amount) {
-              setAmount(parsed.amount.toString());
-              if (parsed.category) {
-                const matchedCategory = categories.find(c => c.toLowerCase() === parsed.category.toLowerCase()) || 'Other';
+            const expenses = Array.isArray(parsed) ? parsed : (parsed && parsed.amount ? [parsed] : []);
+            
+            if (expenses.length > 0) {
+              const item = expenses[0];
+              setAmount(item.amount.toString());
+              if (item.category) {
+                const matchedCategory = categories.find(c => c.toLowerCase() === item.category.toLowerCase()) || 'Other';
                 setCategory(matchedCategory);
               }
-              if (parsed.description) {
-                setDescription(parsed.description);
+              if (item.description) {
+                setDescription(item.description);
               }
-              toast.addToast('✅ Voice note parsed successfully! Details filled below.');
+              
+              if (expenses.length > 1) {
+                toast.addToast(`✅ Voice note parsed! Found ${expenses.length} expenses. First one filled below.`);
+              } else {
+                toast.addToast('✅ Voice note parsed successfully! Details filled below.');
+              }
             } else {
               toast.addToast('❓ Could not extract details from voice. Please fill manually.');
             }

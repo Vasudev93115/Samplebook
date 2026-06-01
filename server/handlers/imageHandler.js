@@ -9,24 +9,37 @@ async function handleImage(from, mediaId, group, user) {
       return { success: false, reason: 'download_failed' };
     }
 
-    // Call Gemini Vision directly to parse the image, identify amounts, and extract structured JSON!
+    // Call Gemini Vision to parse the image, identify amounts, and extract structured JSON array
     const result = await extractExpenseFromImage(base64);
-    if (!result || result.confidence < 0.5) {
+    if (!result) {
       return { success: false, reason: 'parse_failed' };
     }
 
-    await saveExpense({
-      group_id: group.group_id,
-      user_id: user.id,
-      amount: result.amount,
-      currency: group.currency || 'INR',
-      category: result.category,
-      description: result.description,
-      input_type: 'image',
-      confidence: result.confidence
-    });
+    const expensesList = Array.isArray(result) ? result : [result];
+    const validExpenses = expensesList.filter(e => e && e.amount > 0 && e.confidence >= 0.5);
 
-    return { success: true, expense: result };
+    if (validExpenses.length === 0) {
+      return { success: false, reason: 'low_confidence' };
+    }
+
+    const savedExpenses = [];
+    for (const item of validExpenses) {
+      const saved = await saveExpense({
+        group_id: group.group_id,
+        user_id: user.id,
+        amount: item.amount,
+        currency: group.currency || 'INR',
+        category: item.category || 'Other',
+        description: item.description || 'Expense',
+        input_type: 'image',
+        confidence: item.confidence
+      });
+      if (saved) {
+        savedExpenses.push(saved);
+      }
+    }
+
+    return { success: true, expenses: savedExpenses };
   } catch (err) {
     console.error('handleImage error:', err.message);
     return { success: false, reason: 'error' };

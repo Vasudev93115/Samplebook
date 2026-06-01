@@ -111,8 +111,12 @@ app.post('/webhook', (req, res) => {
       else if (detected === 'image') {
         await sendMessage(from, '⏳ Scanning your receipt...');
         const result = await handleImage(from, mediaId, group, user);
-        if (result.success) {
-          reply = buildSuccessReply(result.expense, group.currency);
+        if (result.success && result.expenses && result.expenses.length > 0) {
+          for (const exp of result.expenses) {
+            const successReply = buildSuccessReply(exp, group.currency);
+            await sendMessage(from, successReply);
+          }
+          reply = '';
         } else {
           reply = '❓ Couldn\'t read that image.\nTry a clearer photo or type the amount:\n*200 sabzi*';
         }
@@ -120,16 +124,24 @@ app.post('/webhook', (req, res) => {
       else if (detected === 'audio') {
         await sendMessage(from, '⏳ Listening to your voice note...');
         const result = await handleAudio(from, mediaId, mimeType, group, user);
-        if (result.success) {
-          reply = buildSuccessReply(result.expense, group.currency);
+        if (result.success && result.expenses && result.expenses.length > 0) {
+          for (const exp of result.expenses) {
+            const successReply = buildSuccessReply(exp, group.currency);
+            await sendMessage(from, successReply);
+          }
+          reply = '';
         } else {
           reply = '❓ Couldn\'t understand that audio.\nTry speaking clearly or typing the amount:\n*200 sabzi*';
         }
       }
       else if (detected === 'text') {
         const result = await handleText(from, text, group, user);
-        if (result.success) {
-          reply = buildSuccessReply(result.expense, group.currency);
+        if (result.success && result.expenses && result.expenses.length > 0) {
+          for (const exp of result.expenses) {
+            const successReply = buildSuccessReply(exp, group.currency);
+            await sendMessage(from, successReply);
+          }
+          reply = '';
         } else {
           reply = '❓ I didn\'t understand that.\n\n' +
             'Try sending:\n' +

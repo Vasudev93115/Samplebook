@@ -116,11 +116,50 @@ async function getMonthlyExpenses(groupId, userId) {
   }
 }
 
+async function deleteLastExpense(userId) {
+  try {
+    // 1. Fetch the most recent expense for this user
+    const { data, error } = await supabase
+      .from('expenses')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error('deleteLastExpense fetch error:', error.message);
+      return { success: false, error: error.message };
+    }
+
+    if (!data) {
+      return { success: false, reason: 'no_expense' };
+    }
+
+    // 2. Delete this specific expense by ID
+    const { error: deleteError } = await supabase
+      .from('expenses')
+      .delete()
+      .eq('id', data.id);
+
+    if (deleteError) {
+      console.error('deleteLastExpense delete error:', deleteError.message);
+      return { success: false, error: deleteError.message };
+    }
+
+    return { success: true, expense: data };
+  } catch (err) {
+    console.error('deleteLastExpense exception:', err.message);
+    return { success: false, error: err.message };
+  }
+}
+
 module.exports = {
   supabase,
   getUserByPhone,
   createUser,
   getUserGroup,
   saveExpense,
-  getMonthlyExpenses
+  getMonthlyExpenses,
+  deleteLastExpense
 };

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const { getUserByPhone, createUser, getUserGroup } = require('./services/supabase');
+const { getUserByPhone, createUser, getUserGroup, deleteLastExpense } = require('./services/supabase');
 const { sendMessage } = require('./services/meta');
 const { detectMessageType } = require('./utils/detectType');
 const { currencySymbol } = require('./utils/formatCurrency');
@@ -98,6 +98,18 @@ app.post('/webhook', (req, res) => {
       if (detected === 'report') {
         reply = await handleReport(group, user, group.currency);
       }
+      else if (detected === 'delete') {
+        const result = await deleteLastExpense(user.id);
+        if (result.success) {
+          const sym = currencySymbol[group.currency] || group.currency || '₹';
+          reply = `🗑️ *Expense Deleted Successfully!*\n\n` +
+            `Removed: *${sym}${result.expense.amount}* for *${result.expense.category}* (${result.expense.description})`;
+        } else if (result.reason === 'no_expense') {
+          reply = '❓ *No recent expenses found to delete.*';
+        } else {
+          reply = '⚠️ *Failed to delete your recent expense. Please try again.*';
+        }
+      }
       else if (detected === 'help') {
         reply = '🤖 *SampleBook Help*\n\n' +
           '*Log expenses by sending:*\n' +
@@ -106,6 +118,7 @@ app.post('/webhook', (req, res) => {
           '📱 Screenshot: UPI payment\n\n' +
           '*Commands:*\n' +
           '• *report* — monthly summary\n' +
+          '• *delete* — delete last entry\n' +
           '• *help* — this message';
       }
       else if (detected === 'image') {

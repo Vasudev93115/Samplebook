@@ -25,7 +25,7 @@ async function handleAudio(from, mediaId, mimeType, group, user) {
     }
 
     const expensesList = Array.isArray(result) ? result : [result];
-    const validExpenses = expensesList.filter(e => e && e.amount > 0 && e.confidence >= 0.5);
+    const validExpenses = expensesList.filter(e => e && e.amount > 0 && e.confidence >= 0.3);
 
     if (validExpenses.length === 0) {
       return { success: false, reason: 'low_confidence' };

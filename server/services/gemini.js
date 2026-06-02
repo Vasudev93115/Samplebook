@@ -55,7 +55,7 @@ RULES:
    Groceries, Food & Dining, Transport, Fuel, Shopping, Healthcare, Utilities, Entertainment, Education, Other
 4. Description: Write a clear description in English (max 4 words). 
 5. transaction_type: Must be EXACTLY 'debit' (for expenses, spending, bills, cash-out) or 'credit' (for income, salary, added cash, money received, cash-in). Classify natural income statements (e.g. "Salary 20000", "Papa sent 1000", "Got 500 pocket money", "Added cash 2000") as "credit". Standard purchases default to "debit".
-6. Confidence: Set between 0.8 and 1.0 if clear. Set below 0.5 if unclear.
+6. Confidence: Set between 0.85 and 1.0 for both debit (spending/bills) and credit (added cash/income) transactions if the amount and description are clearly mentioned. Set below 0.5 only if highly ambiguous.
 
 EXAMPLES:
 - "Paid ₹120 to Ramu Tea Stall and salary received 25000" -> [

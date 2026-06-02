@@ -474,6 +474,42 @@ app.post('/api/ensure-user', async (req, res) => {
   }
 });
 
+// Diagnostics endpoint
+app.get('/api/diag', async (req, res) => {
+  const diag = {
+    supabase: 'unknown',
+    gemini: 'unknown',
+    errors: {}
+  };
+  try {
+    const { supabase } = require('./services/supabase');
+    const { data, error } = await supabase.from('users').select('id').limit(1);
+    if (error) {
+      diag.supabase = 'failed';
+      diag.errors.supabase = error.message;
+    } else {
+      diag.supabase = 'ok';
+    }
+  } catch (err) {
+    diag.supabase = 'exception';
+    diag.errors.supabase = err.message;
+  }
+
+  try {
+    const { GoogleGenerativeAI } = require('@google/generative-ai');
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const result = await model.generateContent("hello");
+    const text = result.response.text();
+    diag.gemini = text ? 'ok' : 'empty';
+  } catch (err) {
+    diag.gemini = 'failed';
+    diag.errors.gemini = err.message;
+  }
+
+  res.json(diag);
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', app: 'SampleBook', timestamp: new Date().toISOString() });

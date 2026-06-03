@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -17,16 +17,16 @@ const LINE_COLORS = ['#1a6b47', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899'];
 function CustomTooltip({ active, payload, label, currency }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-100 px-4 py-3 text-sm">
-      <p className="text-xs font-medium text-gray-500 mb-2">{label}</p>
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 px-4 py-3 text-sm">
+      <p className="text-xs font-medium text-gray-500 dark:text-slate-400 mb-2">{label}</p>
       {payload.map((entry, i) => (
         <div key={i} className="flex items-center gap-2 py-0.5">
           <span
             className="w-2 h-2 rounded-full flex-shrink-0"
             style={{ backgroundColor: entry.color }}
           />
-          <span className="text-gray-600">{entry.name}:</span>
-          <span className="font-semibold text-gray-900 ml-auto">
+          <span className="text-gray-600 dark:text-slate-300">{entry.name}:</span>
+          <span className="font-semibold text-gray-900 dark:text-white ml-auto">
             {formatCurrency(entry.value, currency)}
           </span>
         </div>
@@ -76,23 +76,36 @@ export default function SpendingTrend({
     return Object.values(dateMap);
   }, [expenses, members]);
 
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.documentElement.classList.contains('dark')
+  );
+
+  useEffect(() => {
+    const el = document.documentElement;
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(el.classList.contains('dark'));
+    });
+    observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const memberNames = useMemo(() => {
     return members.slice(0, 5).map(m => m.name || m.phone || 'Unknown');
   }, [members]);
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="h-5 w-48 bg-gray-200 rounded skeleton mb-6" />
-        <div className="h-64 bg-gray-50 rounded-xl skeleton" />
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6">
+        <div className="h-5 w-48 bg-gray-200 dark:bg-slate-700 rounded skeleton mb-6" />
+        <div className="h-64 bg-gray-50 dark:bg-slate-800 rounded-xl skeleton" />
       </div>
     );
   }
 
   if (!chartData.length || !memberNames.length) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="text-base font-semibold text-gray-900 mb-4">
+      <div className="glass-card rounded-xl p-6">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
           Daily spend — last 30 days
         </h3>
         <div className="h-64 flex flex-col items-center justify-center text-center">
@@ -108,23 +121,23 @@ export default function SpendingTrend({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <h3 className="text-base font-semibold text-gray-900 mb-4">
+    <div className="glass-card rounded-xl p-6">
+      <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
         Daily spend — last 30 days
       </h3>
       <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? '#1e293b' : '#f0f0f0'} vertical={false} />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 11, fill: '#9ca3af' }}
+              tick={{ fontSize: 11, fill: isDarkMode ? '#64748b' : '#9ca3af' }}
               tickLine={false}
-              axisLine={{ stroke: '#e5e7eb' }}
+              axisLine={{ stroke: isDarkMode ? '#334155' : '#e5e7eb' }}
               interval={4}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: '#9ca3af' }}
+              tick={{ fontSize: 11, fill: isDarkMode ? '#64748b' : '#9ca3af' }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(val) => formatCurrency(val, currency)}

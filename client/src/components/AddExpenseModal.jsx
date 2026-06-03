@@ -271,18 +271,18 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center">
               <Plus size={20} className="text-emerald-600" />
             </div>
-            <h2 className="text-lg font-bold text-gray-900">{transactionType === 'credit' ? 'Add Income (Cash-In)' : 'Add Expense (Cash-Out)'}</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">{transactionType === 'credit' ? 'Add Income (Cash-In)' : 'Add Expense (Cash-Out)'}</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-all"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-all"
           >
             <X size={20} />
           </button>
@@ -291,14 +291,14 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
           {/* Segmented Control: Expense vs Income */}
-          <div className="bg-gray-100 p-1 rounded-xl flex gap-1 border border-gray-200/50">
+          <div className="bg-gray-100 dark:bg-slate-800 p-1 rounded-xl flex gap-1 border border-gray-200/50 dark:border-slate-700">
             <button
               type="button"
               onClick={() => setTransactionType('debit')}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
                 transactionType === 'debit'
                   ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               Expense (Cash-Out)
@@ -309,7 +309,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
                 transactionType === 'credit'
                   ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               Income (Cash-In)
@@ -317,17 +317,17 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
           </div>
 
           {/* Receipt/Image Scanner Section */}
-          <div className="bg-emerald-50/40 rounded-xl p-4 border border-dashed border-emerald-200">
+          <div className="bg-emerald-50/40 dark:bg-emerald-950/10 rounded-xl p-4 border border-dashed border-emerald-200 dark:border-emerald-800/40">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">📷</span>
-              <h3 className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Receipt AI Scanner</h3>
+              <h3 className="text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Receipt AI Scanner</h3>
             </div>
-            <p className="text-[11px] text-gray-500 mb-3">
+            <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-3">
               Upload a Paytm/PhonePe/GPay screenshot or shop receipt to automatically autofill amount, category, and description using AI.
             </p>
             <div className="flex items-center gap-3">
               <label className="flex-1 cursor-pointer">
-                <span className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-all text-center">
+                <span className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-900/40 dark:text-emerald-400 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-all text-center">
                   {selectedFile ? 'Change Receipt' : 'Upload Receipt'}
                 </span>
                 <input
@@ -363,7 +363,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
               )}
             </div>
             {selectedFile && !scanning && (
-              <p className="text-[11px] text-emerald-700 font-medium mt-2 truncate">
+              <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium mt-2 truncate">
                 Selected: {selectedFile.name}
               </p>
             )}
@@ -432,7 +432,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Amount</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Amount</label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
                   {currency === 'INR' ? '₹' : '$'}
@@ -451,7 +451,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Date</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Date</label>
               <input
                 type="date"
                 value={date}
@@ -463,7 +463,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Paid By</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Paid By</label>
             <select
               value={userId}
               onChange={e => setUserId(e.target.value)}
@@ -480,7 +480,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Category</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Category</label>
             <select
               value={category}
               onChange={e => setCategory(e.target.value)}
@@ -496,7 +496,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Description</label>
             <input
               type="text"
               value={description}
@@ -511,7 +511,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all"
+              className="flex-1 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-all"
             >
               Cancel
             </button>

@@ -6,34 +6,34 @@ import { getEmoji, getAllCategories } from '../lib/categoryEmoji';
 
 function SkeletonRow({ showMember }) {
   return (
-    <tr className="border-b border-gray-50">
+    <tr className="border-b border-gray-50 dark:border-slate-800">
       {showMember && (
         <td className="px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gray-200 skeleton" />
-            <div className="h-4 w-24 bg-gray-200 rounded skeleton" />
+            <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 skeleton" />
+            <div className="h-4 w-24 bg-gray-200 dark:bg-slate-700 rounded skeleton" />
           </div>
         </td>
       )}
-      <td className="px-5 py-4"><div className="h-4 w-36 bg-gray-200 rounded skeleton" /></td>
-      <td className="px-5 py-4"><div className="h-4 w-24 bg-gray-200 rounded skeleton" /></td>
-      <td className="px-5 py-4"><div className="h-4 w-20 bg-gray-200 rounded skeleton" /></td>
-      <td className="px-5 py-4"><div className="h-4 w-16 bg-gray-200 rounded skeleton" /></td>
-      <td className="px-5 py-4"><div className="h-4 w-8 bg-gray-200 rounded skeleton" /></td>
+      <td className="px-5 py-4"><div className="h-4 w-36 bg-gray-200 dark:bg-slate-700 rounded skeleton" /></td>
+      <td className="px-5 py-4"><div className="h-4 w-24 bg-gray-200 dark:bg-slate-700 rounded skeleton" /></td>
+      <td className="px-5 py-4"><div className="h-4 w-20 bg-gray-200 dark:bg-slate-700 rounded skeleton" /></td>
+      <td className="px-5 py-4"><div className="h-4 w-16 bg-gray-200 dark:bg-slate-700 rounded skeleton" /></td>
+      <td className="px-5 py-4"><div className="h-4 w-8 bg-gray-200 dark:bg-slate-700 rounded skeleton" /></td>
     </tr>
   );
 }
 
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm">
+    <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gray-200 skeleton" />
+        <div className="w-10 h-10 rounded-xl bg-gray-200 dark:bg-slate-700 skeleton" />
         <div className="flex-1">
-          <div className="h-4 w-32 bg-gray-200 rounded skeleton mb-2" />
-          <div className="h-3 w-20 bg-gray-100 rounded skeleton" />
+          <div className="h-4 w-32 bg-gray-200 dark:bg-slate-700 rounded skeleton mb-2" />
+          <div className="h-3 w-20 bg-gray-100 dark:bg-slate-800 rounded skeleton" />
         </div>
-        <div className="h-5 w-16 bg-gray-200 rounded skeleton" />
+        <div className="h-5 w-16 bg-gray-200 dark:bg-slate-700 rounded skeleton" />
       </div>
     </div>
   );
@@ -115,13 +115,13 @@ export default function ExpenseTable({
   // Loading State
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm overflow-hidden">
         {!compact && (
-          <div className="p-4 border-b border-gray-100">
+          <div className="p-4 border-b border-gray-100 dark:border-slate-800">
             <div className="flex flex-wrap gap-3">
-              <div className="h-10 w-64 bg-gray-100 rounded-xl skeleton" />
-              <div className="h-10 w-36 bg-gray-100 rounded-xl skeleton" />
-              <div className="h-10 w-36 bg-gray-100 rounded-xl skeleton" />
+              <div className="h-10 w-64 bg-gray-100 dark:bg-slate-800 rounded-xl skeleton" />
+              <div className="h-10 w-36 bg-gray-100 dark:bg-slate-800 rounded-xl skeleton" />
+              <div className="h-10 w-36 bg-gray-100 dark:bg-slate-800 rounded-xl skeleton" />
             </div>
           </div>
         )}
@@ -148,9 +148,9 @@ export default function ExpenseTable({
   // Empty State
   if (!expenses || expenses.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm overflow-hidden">
         {!compact && (
-          <div className="p-4 border-b border-gray-100">
+          <div className="p-4 border-b border-gray-100 dark:border-slate-800">
             <div className="flex flex-wrap gap-3">
               <div className="relative flex-1 min-w-[220px] max-w-xs">
                 <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -178,10 +178,10 @@ export default function ExpenseTable({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div className="glass-card rounded-xl overflow-hidden">
       {/* Filter Bar */}
       {!compact && (
-        <div className="p-4 border-b border-gray-100">
+        <div className="p-4 border-b border-gray-100 dark:border-slate-800">
           <div className="flex flex-wrap gap-3">
             <div className="relative flex-1 min-w-[220px] max-w-xs">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />

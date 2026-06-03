@@ -33,7 +33,7 @@ export function ToastProvider({ children }) {
         {toasts.map(toast => (
           <div
             key={toast.id}
-            className={`pointer-events-auto bg-white rounded-lg shadow-lg border border-gray-100 p-4 flex items-start gap-3 ${toast.exiting ? 'toast-exit' : 'toast-enter'}`}
+            className={`pointer-events-auto bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-gray-100 dark:border-slate-700 p-4 flex items-start gap-3 ${toast.exiting ? 'toast-exit' : 'toast-enter'}`}
             style={{ borderLeft: `4px solid ${toast.type === 'error' ? '#dc2626' : '#1a6b47'}` }}
           >
             <div className="flex-shrink-0 mt-0.5">
@@ -43,10 +43,10 @@ export function ToastProvider({ children }) {
                 <CheckCircle size={18} className="text-emerald-600" />
               )}
             </div>
-            <p className="text-sm text-gray-800 flex-1 leading-relaxed">{toast.message}</p>
+            <p className="text-sm text-gray-800 dark:text-slate-200 flex-1 leading-relaxed">{toast.message}</p>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-gray-400 hover:text-gray-600 transition-colors duration-150 flex-shrink-0 mt-0.5"
+              className="text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors duration-150 flex-shrink-0 mt-0.5"
             >
               <X size={16} />
             </button>

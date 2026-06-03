@@ -357,6 +357,7 @@ export default function MemberDashboard() {
           iconBg={netBalance >= 0 ? "bg-emerald-50 dark:bg-emerald-950/20" : "bg-rose-50 dark:bg-rose-950/20"}
           iconColor={netBalance >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}
           loading={expensesLoading}
+          isGlow={true}
         />
         <SummaryCard
           icon={Award}
@@ -448,7 +449,7 @@ export default function MemberDashboard() {
       {budgetsLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-white rounded-xl p-5 shadow-sm">
+            <div key={i} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-gray-200 rounded-xl skeleton" />
                 <div>
@@ -680,7 +681,7 @@ export default function MemberDashboard() {
 
   if (groupLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-paper">
+      <div className="min-h-screen flex items-center justify-center bg-paper dark:bg-slate-950">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full border-[3px] border-green border-t-transparent animate-spin"></div>
           <p className="text-ink-muted text-sm">Loading...</p>

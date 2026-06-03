@@ -131,18 +131,18 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-paper flex flex-col">
+    <div className="min-h-screen bg-paper dark:bg-slate-950 flex flex-col">
       {/* Header */}
-      <header className="w-full px-6 py-4 flex items-center justify-between bg-white border-b border-border">
+      <header className="w-full px-6 py-4 flex items-center justify-between bg-white dark:bg-slate-950 border-b border-border dark:border-slate-800">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-green-light flex items-center justify-center">
             <Wallet className="w-5 h-5 text-green" />
           </div>
-          <span className="text-lg font-bold text-ink">SampleBook</span>
+          <span className="text-lg font-bold text-ink dark:text-white">SampleBook</span>
         </div>
         <button
           onClick={signOut}
-          className="text-sm text-ink-muted hover:text-ink font-medium transition-colors"
+          className="text-sm text-ink-muted dark:text-slate-400 hover:text-ink dark:hover:text-white font-medium transition-colors"
         >
           Sign out
         </button>
@@ -153,10 +153,10 @@ export default function Onboarding() {
         <div className="w-full max-w-[760px]">
           {/* Heading */}
           <div className="text-center mb-10 fade-in">
-            <h1 className="text-3xl lg:text-4xl font-extrabold text-ink mb-3">
+            <h1 className="text-3xl lg:text-4xl font-extrabold text-ink dark:text-white mb-3">
               Let&apos;s get you set up
             </h1>
-            <p className="text-ink-muted text-[15px] max-w-md mx-auto">
+            <p className="text-ink-muted dark:text-slate-400 text-[15px] max-w-md mx-auto">
               Create a new group or join an existing one to start tracking expenses
             </p>
           </div>
@@ -189,34 +189,34 @@ export default function Onboarding() {
                 </div>
               ) : step === 'form' ? (
                 /* Create Form */
-                <div className="bg-white border-2 border-green/20 p-7 rounded-2xl fade-in">
+                <div className="bg-white dark:bg-slate-900 border-2 border-green/20 p-7 rounded-2xl fade-in">
                   <button
                     onClick={() => { setActiveCard(null); setStep('choice'); setCreateError(''); }}
-                    className="mb-4 flex items-center gap-1 text-ink-muted text-sm font-medium hover:text-ink transition-colors"
+                    className="mb-4 flex items-center gap-1 text-ink-muted dark:text-slate-400 text-sm font-medium hover:text-ink dark:hover:text-white transition-colors"
                   >
                     <ArrowRight className="w-4 h-4 rotate-180" />
                     <span>Back</span>
                   </button>
 
-                  <h3 className="text-xl font-bold text-ink mb-5">Create your group</h3>
+                  <h3 className="text-xl font-bold text-ink dark:text-white mb-5">Create your group</h3>
 
                   <form onSubmit={handleCreateGroup} className="space-y-5">
                     {/* Group Name */}
                     <div>
-                      <label className="block text-sm font-semibold text-ink-soft mb-1.5">Group Name</label>
+                      <label className="block text-sm font-semibold text-ink-soft dark:text-slate-300 mb-1.5">Group Name</label>
                       <input
                         type="text"
                         value={groupName}
                         onChange={(e) => setGroupName(e.target.value)}
                         placeholder="e.g. Sharma Family"
-                        className="w-full px-4 py-3 border-2 border-border rounded-xl text-ink font-medium outline-none focus:border-green transition-colors placeholder:text-ink-muted/50"
+                        className="w-full px-4 py-3 border-2 border-border dark:border-slate-700 rounded-xl text-ink dark:text-white font-medium outline-none focus:border-green transition-colors placeholder:text-ink-muted/50 dark:bg-slate-900"
                         autoFocus
                       />
                     </div>
 
                     {/* Group Type Toggle */}
                     <div>
-                      <label className="block text-sm font-semibold text-ink-soft mb-1.5">Group Type</label>
+                      <label className="block text-sm font-semibold text-ink-soft dark:text-slate-300 mb-1.5">Group Type</label>
                       <div className="flex gap-2">
                         {GROUP_TYPES.map((t) => (
                           <button
@@ -238,11 +238,11 @@ export default function Onboarding() {
 
                     {/* Currency Dropdown */}
                     <div className="relative">
-                      <label className="block text-sm font-semibold text-ink-soft mb-1.5">Currency</label>
+                      <label className="block text-sm font-semibold text-ink-soft dark:text-slate-300 mb-1.5">Currency</label>
                       <button
                         type="button"
                         onClick={() => setCurrencyOpen(!currencyOpen)}
-                        className="w-full flex items-center justify-between px-4 py-3 border-2 border-border rounded-xl text-ink font-medium hover:border-ink-muted/30 transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-3 border-2 border-border dark:border-slate-700 rounded-xl text-ink dark:text-white font-medium hover:border-ink-muted/30 transition-colors dark:bg-slate-900"
                       >
                         <span>
                           {currencySymbol[currency] || currency} — {CURRENCIES.find(c => c.code === currency)?.label}
@@ -250,14 +250,14 @@ export default function Onboarding() {
                         <ChevronDown className={`w-4 h-4 text-ink-muted transition-transform ${currencyOpen ? 'rotate-180' : ''}`} />
                       </button>
                       {currencyOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-border rounded-xl shadow-lg z-20 overflow-hidden">
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-900 border border-border dark:border-slate-700 rounded-xl shadow-lg z-20 overflow-hidden">
                           {CURRENCIES.map((c) => (
                             <button
                               key={c.code}
                               type="button"
                               onClick={() => { setCurrency(c.code); setCurrencyOpen(false); }}
-                              className={`w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-medium hover:bg-gray-50 transition-colors ${
-                                currency === c.code ? 'bg-green-light text-green' : 'text-ink'
+                              className={`w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors ${
+                                currency === c.code ? 'bg-green-light text-green' : 'text-ink dark:text-slate-300'
                               }`}
                             >
                               <span className="text-base w-8 text-center font-semibold">{c.symbol}</span>
@@ -296,7 +296,7 @@ export default function Onboarding() {
                 </div>
               ) : (
                 /* Create Success */
-                <div className="bg-white border-2 border-green/20 p-7 rounded-2xl text-center fade-in">
+                <div className="bg-white dark:bg-slate-900 border-2 border-green/20 p-7 rounded-2xl text-center fade-in">
                   {/* Success animation */}
                   <div className="w-16 h-16 mx-auto rounded-full bg-green-light flex items-center justify-center mb-4">
                     <div className="w-10 h-10 rounded-full bg-green flex items-center justify-center">
@@ -304,8 +304,8 @@ export default function Onboarding() {
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-ink mb-1">Group created! 🎉</h3>
-                  <p className="text-ink-muted text-sm mb-6">Share this invite code with your members</p>
+                  <h3 className="text-xl font-bold text-ink dark:text-white mb-1">Group created! 🎉</h3>
+                  <p className="text-ink-muted dark:text-slate-400 text-sm mb-6">Share this invite code with your members</p>
 
                   {/* Invite Code */}
                   <div className="inline-flex items-center gap-3 px-6 py-3 bg-green-light rounded-xl mb-4">
@@ -314,7 +314,7 @@ export default function Onboarding() {
                     </span>
                     <button
                       onClick={copyInviteCode}
-                      className="w-8 h-8 rounded-lg bg-white flex items-center justify-center hover:bg-gray-50 transition-colors border border-green/20"
+                      className="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors border border-green/20"
                     >
                       {codeCopied ? (
                         <Check className="w-4 h-4 text-green" />
@@ -356,12 +356,12 @@ export default function Onboarding() {
             >
               {activeCard !== 'join' ? (
                 /* Choice View */
-                <div className="bg-white border-2 border-green/20 p-7 rounded-2xl h-full flex flex-col">
+                <div className="bg-white dark:bg-slate-900 border-2 border-green/20 p-7 rounded-2xl h-full flex flex-col">
                   <div className="w-14 h-14 rounded-2xl bg-green-light flex items-center justify-center mb-5">
                     <Users className="w-7 h-7 text-green" />
                   </div>
-                  <h3 className="text-ink text-xl font-bold mb-2">Join a Group</h3>
-                  <p className="text-ink-muted text-sm mb-6 flex-1">
+                  <h3 className="text-ink dark:text-white text-xl font-bold mb-2">Join a Group</h3>
+                  <p className="text-ink-muted dark:text-slate-400 text-sm mb-6 flex-1">
                     Enter the invite code shared by your family head or business admin
                   </p>
                   <button
@@ -374,26 +374,26 @@ export default function Onboarding() {
                 </div>
               ) : step === 'form' ? (
                 /* Join Form */
-                <div className="bg-white border-2 border-green/20 p-7 rounded-2xl fade-in">
+                <div className="bg-white dark:bg-slate-900 border-2 border-green/20 p-7 rounded-2xl fade-in">
                   <button
                     onClick={() => { setActiveCard(null); setStep('choice'); setJoinError(''); }}
-                    className="mb-4 flex items-center gap-1 text-ink-muted text-sm font-medium hover:text-ink transition-colors"
+                    className="mb-4 flex items-center gap-1 text-ink-muted dark:text-slate-400 text-sm font-medium hover:text-ink dark:hover:text-white transition-colors"
                   >
                     <ArrowRight className="w-4 h-4 rotate-180" />
                     <span>Back</span>
                   </button>
 
-                  <h3 className="text-xl font-bold text-ink mb-5">Enter invite code</h3>
+                  <h3 className="text-xl font-bold text-ink dark:text-white mb-5">Enter invite code</h3>
 
                   <form onSubmit={handleJoinGroup} className="space-y-5">
                     <div>
-                      <label className="block text-sm font-semibold text-ink-soft mb-1.5">Invite Code</label>
+                      <label className="block text-sm font-semibold text-ink-soft dark:text-slate-300 mb-1.5">Invite Code</label>
                       <input
                         type="text"
                         value={inviteCode}
                         onChange={(e) => setInviteCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8))}
                         placeholder="e.g. ABC123"
-                        className="w-full px-4 py-3 border-2 border-border rounded-xl text-ink font-bold text-lg tracking-[0.15em] text-center outline-none focus:border-green transition-colors placeholder:text-ink-muted/50 placeholder:font-medium placeholder:text-base placeholder:tracking-normal uppercase font-mono"
+                        className="w-full px-4 py-3 border-2 border-border dark:border-slate-700 rounded-xl text-ink dark:text-white font-bold text-lg tracking-[0.15em] text-center outline-none focus:border-green transition-colors placeholder:text-ink-muted/50 placeholder:font-medium placeholder:text-base placeholder:tracking-normal uppercase font-mono dark:bg-slate-900"
                         maxLength={8}
                         autoFocus
                       />
@@ -426,16 +426,16 @@ export default function Onboarding() {
                 </div>
               ) : (
                 /* Join Success */
-                <div className="bg-white border-2 border-green/20 p-7 rounded-2xl text-center fade-in">
+                <div className="bg-white dark:bg-slate-900 border-2 border-green/20 p-7 rounded-2xl text-center fade-in">
                   <div className="w-16 h-16 mx-auto rounded-full bg-green-light flex items-center justify-center mb-4">
                     <div className="w-10 h-10 rounded-full bg-green flex items-center justify-center">
                       <Check className="w-6 h-6 text-white" strokeWidth={3} />
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-ink mb-1">You&apos;re in! 🎉</h3>
-                  <p className="text-ink-muted text-sm mb-6">
-                    Welcome to <span className="font-semibold text-ink">{joinedGroup?.name || 'the group'}</span>
+                  <h3 className="text-xl font-bold text-ink dark:text-white mb-1">You&apos;re in! 🎉</h3>
+                  <p className="text-ink-muted dark:text-slate-400 text-sm mb-6">
+                    Welcome to <span className="font-semibold text-ink dark:text-white">{joinedGroup?.name || 'the group'}</span>
                   </p>
 
                   <button
@@ -451,7 +451,7 @@ export default function Onboarding() {
           </div>
 
           {/* Footer note */}
-          <p className="text-center text-ink-muted text-xs mt-8">
+          <p className="text-center text-ink-muted dark:text-slate-500 text-xs mt-8">
             You can always change your group settings later from the dashboard
           </p>
         </div>

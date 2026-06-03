@@ -115,18 +115,18 @@ function AddMemberModal({ open, onClose, onAdd, group }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden dark:border dark:border-slate-800">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center">
               <UserPlus size={20} className="text-emerald-600" />
             </div>
-            <h2 className="text-lg font-bold text-gray-900">Add Member</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Add Member</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-all"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-all"
           >
             <X size={20} />
           </button>
@@ -135,42 +135,42 @@ function AddMemberModal({ open, onClose, onAdd, group }) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Name</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Name</label>
             <input
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Member name"
-              className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
+              className="w-full px-4 py-2.5 text-sm border border-gray-200 dark:border-slate-700 rounded-xl bg-gray-50 dark:bg-slate-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Phone</label>
             <div className="flex items-center">
-              <span className="px-3 py-2.5 text-sm bg-gray-100 border border-r-0 border-gray-200 rounded-l-xl text-gray-500 font-medium">
+              <span className="px-3 py-2.5 text-sm bg-gray-100 dark:bg-slate-800 border border-r-0 border-gray-200 dark:border-slate-700 rounded-l-xl text-gray-500 dark:text-slate-400 font-medium">
                 +91
               </span>
               <input
                 value={phone}
                 onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                 placeholder="9876543210"
-                className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-r-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
+                className="flex-1 px-4 py-2.5 text-sm border border-gray-200 dark:border-slate-700 rounded-r-xl bg-gray-50 dark:bg-slate-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Role</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Role</label>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setRole('member')}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-xl border transition-all ${
                   role === 'member'
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                    : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                    ? 'bg-emerald-50 dark:bg-emerald-950 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400'
+                    : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700'
                 }`}
               >
                 Member
@@ -180,8 +180,8 @@ function AddMemberModal({ open, onClose, onAdd, group }) {
                 onClick={() => setRole('admin')}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-xl border transition-all ${
                   role === 'admin'
-                    ? 'bg-amber-50 border-amber-200 text-amber-700'
-                    : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                    ? 'bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400'
+                    : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700'
                 }`}
               >
                 Admin
@@ -195,14 +195,14 @@ function AddMemberModal({ open, onClose, onAdd, group }) {
               <button
                 type="button"
                 onClick={generateCode}
-                className="w-full py-2.5 text-sm font-medium text-emerald-600 border border-dashed border-emerald-300 rounded-xl hover:bg-emerald-50 transition-all"
+                className="w-full py-2.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 border border-dashed border-emerald-300 dark:border-emerald-700 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-all"
               >
                 Generate Invite Code
               </button>
             ) : (
-              <div className="bg-gray-50 rounded-xl p-4">
+              <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm text-gray-500">Invite Code</span>
+                  <span className="text-sm text-gray-500 dark:text-slate-400">Invite Code</span>
                   <button
                     type="button"
                     onClick={handleCopy}
@@ -212,7 +212,7 @@ function AddMemberModal({ open, onClose, onAdd, group }) {
                     {copied ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
-                <p className="text-2xl font-mono font-bold text-gray-900 tracking-widest text-center">
+                <p className="text-2xl font-mono font-bold text-gray-900 dark:text-white tracking-widest text-center">
                   {inviteCode}
                 </p>
                 <button
@@ -235,7 +235,7 @@ function AddMemberModal({ open, onClose, onAdd, group }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all"
+              className="flex-1 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-all"
             >
               Cancel
             </button>
@@ -280,22 +280,22 @@ function BudgetModal({ open, onClose, onSave, editBudget = null }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900">
+      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden dark:border dark:border-slate-800">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">
             {editBudget ? 'Edit Budget' : 'Add Budget'}
           </h2>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100 text-gray-400">
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 dark:text-slate-500">
             <X size={20} />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Category</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Category</label>
             <select
               value={category}
               onChange={e => setCategory(e.target.value)}
-              className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
+              className="w-full px-4 py-2.5 text-sm border border-gray-200 dark:border-slate-700 rounded-xl bg-gray-50 dark:bg-slate-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
               required
             >
               <option value="">Select category</option>
@@ -307,16 +307,16 @@ function BudgetModal({ open, onClose, onSave, editBudget = null }) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Monthly Limit</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Monthly Limit</label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-sm">₹</span>
               <input
                 type="number"
                 value={limit}
                 onChange={e => setLimit(e.target.value)}
                 placeholder="5000"
                 min="1"
-                className="w-full pl-8 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
+                className="w-full pl-8 pr-4 py-2.5 text-sm border border-gray-200 dark:border-slate-700 rounded-xl bg-gray-50 dark:bg-slate-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
                 required
               />
             </div>
@@ -325,7 +325,7 @@ function BudgetModal({ open, onClose, onSave, editBudget = null }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all"
+              className="flex-1 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-all"
             >
               Cancel
             </button>
@@ -353,19 +353,19 @@ function BudgetCard({ budget, spent = 0, currency = 'INR', onEdit, onDelete }) {
   };
 
   const getBarTrack = () => {
-    if (percentage >= 90) return 'bg-red-100';
-    if (percentage >= 70) return 'bg-amber-100';
-    return 'bg-emerald-100';
+    if (percentage >= 90) return 'bg-red-100 dark:bg-red-950';
+    if (percentage >= 70) return 'bg-amber-100 dark:bg-amber-950';
+    return 'bg-emerald-100 dark:bg-emerald-950';
   };
 
   return (
-    <div className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 group">
+    <div className="bg-white dark:bg-slate-900/70 rounded-xl p-5 shadow-sm hover:shadow-md dark:border dark:border-slate-800/40 transition-all duration-200 group">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <span className="text-2xl">{getEmoji(budget.category)}</span>
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 capitalize">{budget.category}</h4>
-            <p className="text-xs text-gray-500">
+            <h4 className="text-sm font-semibold text-gray-900 dark:text-white capitalize">{budget.category}</h4>
+            <p className="text-xs text-gray-500 dark:text-slate-400">
               {formatCurrency(budget.limit, currency)}/month
             </p>
           </div>
@@ -373,13 +373,13 @@ function BudgetCard({ budget, spent = 0, currency = 'INR', onEdit, onDelete }) {
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => onEdit?.(budget)}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-all"
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-all"
           >
             <Edit3 size={14} />
           </button>
           <button
             onClick={() => onDelete?.(budget)}
-            className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-all"
+            className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950 text-gray-400 dark:text-slate-500 hover:text-red-500 transition-all"
           >
             <Trash2 size={14} />
           </button>
@@ -393,9 +393,9 @@ function BudgetCard({ budget, spent = 0, currency = 'INR', onEdit, onDelete }) {
         />
       </div>
 
-      <div className="flex items-center justify-between text-xs text-gray-500">
+      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-slate-400">
         <span>
-          <span className="font-semibold text-gray-900">{formatCurrency(spent, currency)}</span>{' '}
+          <span className="font-semibold text-gray-900 dark:text-white">{formatCurrency(spent, currency)}</span>{' '}
           / {formatCurrency(budget.limit, currency)}
         </span>
         <span className={`font-semibold ${percentage >= 90 ? 'text-red-600' : percentage >= 70 ? 'text-amber-600' : 'text-emerald-600'}`}>
@@ -601,10 +601,10 @@ function AdminDashboardView({
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             {getGreeting()}, {user?.name?.split(' ')[0] || 'Admin'} 👋
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
             Here&apos;s what&apos;s happening with {group?.name || 'your group'} today
           </p>
         </div>
@@ -645,6 +645,7 @@ function AdminDashboardView({
           iconBg={netBalance >= 0 ? "bg-emerald-50" : "bg-rose-50"}
           iconColor={netBalance >= 0 ? "text-emerald-600" : "text-rose-600"}
           loading={loading}
+          isGlow={true}
         />
         <SummaryCard
           icon={Crown}
@@ -659,25 +660,25 @@ function AdminDashboardView({
 
       {/* Member Breakdown */}
       <div>
-        <h2 className="text-base font-semibold text-gray-900 mb-3">Member breakdown</h2>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-3">Member breakdown</h2>
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl p-5 shadow-sm">
+              <div key={i} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm">
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-full bg-gray-200 skeleton" />
+                  <div className="w-11 h-11 rounded-full bg-gray-200 dark:bg-slate-700 skeleton" />
                   <div className="flex-1">
-                    <div className="h-4 w-24 bg-gray-200 rounded skeleton mb-2" />
-                    <div className="h-3 w-32 bg-gray-100 rounded skeleton" />
+                    <div className="h-4 w-24 bg-gray-200 dark:bg-slate-700 rounded skeleton mb-2" />
+                    <div className="h-3 w-32 bg-gray-100 dark:bg-slate-800 rounded skeleton" />
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : memberStats.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 shadow-sm text-center">
-            <Users size={32} className="text-gray-200 mx-auto mb-3" />
-            <p className="text-sm text-gray-500">No members in this group yet</p>
+          <div className="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm text-center">
+            <Users size={32} className="text-gray-200 dark:text-slate-600 mx-auto mb-3" />
+            <p className="text-sm text-gray-500 dark:text-slate-400">No members in this group yet</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -716,7 +717,7 @@ function AdminDashboardView({
       {/* Recent Transactions */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-semibold text-gray-900">Recent transactions</h2>
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white">Recent transactions</h2>
           <button
             onClick={() => setActiveTab('expenses')}
             className="text-sm font-medium text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 transition-colors"
@@ -742,8 +743,8 @@ function AdminDashboardView({
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">All Expenses</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">All Expenses</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
             {filteredExpenses.length} total expense{filteredExpenses.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -757,7 +758,7 @@ function AdminDashboardView({
           </button>
           <button
             onClick={exportCSV}
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 shadow-sm transition-all"
           >
             <Download size={16} />
             Export CSV
@@ -785,8 +786,8 @@ function AdminDashboardView({
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Members</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Members</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
             {members.length} member{members.length !== 1 ? 's' : ''} in {group?.name || 'group'}
           </p>
         </div>
@@ -802,24 +803,24 @@ function AdminDashboardView({
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="bg-white rounded-xl p-5 shadow-sm">
+            <div key={i} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-full bg-gray-200 skeleton" />
+                <div className="w-11 h-11 rounded-full bg-gray-200 dark:bg-slate-700 skeleton" />
                 <div className="flex-1">
-                  <div className="h-4 w-28 bg-gray-200 rounded skeleton mb-2" />
-                  <div className="h-3 w-40 bg-gray-100 rounded skeleton" />
+                  <div className="h-4 w-28 bg-gray-200 dark:bg-slate-700 rounded skeleton mb-2" />
+                  <div className="h-3 w-40 bg-gray-100 dark:bg-slate-800 rounded skeleton" />
                 </div>
               </div>
             </div>
           ))}
         </div>
       ) : members.length === 0 ? (
-        <div className="bg-white rounded-xl p-12 shadow-sm text-center">
-          <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
-            <Users size={28} className="text-gray-300" />
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-12 shadow-sm text-center">
+          <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4">
+            <Users size={28} className="text-gray-300 dark:text-slate-600" />
           </div>
-          <h3 className="text-base font-semibold text-gray-900 mb-1">No members yet</h3>
-          <p className="text-sm text-gray-500 mb-4 max-w-xs mx-auto">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-1">No members yet</h3>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mb-4 max-w-xs mx-auto">
             Add members to your group and they can start tracking expenses via WhatsApp.
           </p>
           <button
@@ -831,51 +832,51 @@ function AdminDashboardView({
           </button>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm overflow-hidden">
           {/* Desktop Table */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50/60">
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Member</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Phone</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Role</th>
-                  <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">This Month</th>
-                  <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Txns</th>
-                  <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                <tr className="bg-gray-50/60 dark:bg-slate-800/60">
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Member</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Phone</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Role</th>
+                  <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">This Month</th>
+                  <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Txns</th>
+                  <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
                 {memberStats.map((m, idx) => (
                   <tr
                     key={m.id || m.phone || idx}
-                    className="hover:bg-emerald-50/30 transition-colors"
+                    className="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors"
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold ${getAvatarColor(m.name)}`}>
                           {getInitials(m.name)}
                         </div>
-                        <span className="text-sm font-medium text-gray-900">{m.name}</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">{m.name}</span>
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-sm text-gray-500 font-mono">{m.phone || '—'}</span>
+                      <span className="text-sm text-gray-500 dark:text-slate-400 font-mono">{m.phone || '—'}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase ${
-                        m.role === 'admin' ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600'
+                        m.role === 'admin' ? 'bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400'
                       }`}>
                         {m.role || 'member'}
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm font-semibold text-gray-900">
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">
                         {formatCurrency(m.total_spent, currency)}
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm text-gray-600">{m.transaction_count}</span>
+                      <span className="text-sm text-gray-600 dark:text-slate-400">{m.transaction_count}</span>
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       {m.id !== user?.id ? (
@@ -885,13 +886,13 @@ function AdminDashboardView({
                               onDeleteMember?.(m.id || m.phone);
                             }
                           }}
-                          className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-all"
+                          className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950 hover:text-rose-700 transition-all"
                           title="Remove Member"
                         >
                           <Trash2 size={15} />
                         </button>
                       ) : (
-                        <span className="text-xs text-gray-400 italic">You</span>
+                        <span className="text-xs text-gray-400 dark:text-slate-500 italic">You</span>
                       )}
                     </td>
                   </tr>
@@ -901,7 +902,7 @@ function AdminDashboardView({
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden divide-y divide-gray-100">
+          <div className="md:hidden divide-y divide-gray-100 dark:divide-slate-800">
             {memberStats.map((m, idx) => (
               <div key={m.id || m.phone || idx} className="p-4 flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold ${getAvatarColor(m.name)}`}>
@@ -909,19 +910,19 @@ function AdminDashboardView({
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-gray-900 truncate">{m.name}</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{m.name}</p>
                     <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
-                      m.role === 'admin' ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600'
+                      m.role === 'admin' ? 'bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400'
                     }`}>
                       {m.role || 'member'}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500">{m.phone}</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">{m.phone}</p>
                 </div>
                 <div className="text-right flex items-center gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">{formatCurrency(m.total_spent, currency)}</p>
-                    <p className="text-xs text-gray-500">{m.transaction_count} txns</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatCurrency(m.total_spent, currency)}</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400">{m.transaction_count} txns</p>
                   </div>
                   {m.id !== user?.id && (
                     <button
@@ -930,7 +931,7 @@ function AdminDashboardView({
                           onDeleteMember?.(m.id || m.phone);
                         }
                       }}
-                      className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-all"
+                      className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950 hover:text-rose-700 transition-all"
                       title="Remove Member"
                     >
                       <Trash2 size={15} />
@@ -961,8 +962,8 @@ function AdminDashboardView({
       <div>
         <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Budgets</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Budgets</h1>
+            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
               Set spending limits by category to stay on track
             </p>
           </div>
@@ -978,26 +979,26 @@ function AdminDashboardView({
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl p-5 shadow-sm">
+              <div key={i} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gray-200 rounded-xl skeleton" />
+                  <div className="w-10 h-10 bg-gray-200 dark:bg-slate-700 rounded-xl skeleton" />
                   <div>
-                    <div className="h-4 w-20 bg-gray-200 rounded skeleton mb-1" />
-                    <div className="h-3 w-16 bg-gray-100 rounded skeleton" />
+                    <div className="h-4 w-20 bg-gray-200 dark:bg-slate-700 rounded skeleton mb-1" />
+                    <div className="h-3 w-16 bg-gray-100 dark:bg-slate-800 rounded skeleton" />
                   </div>
                 </div>
-                <div className="h-2 w-full bg-gray-100 rounded-full skeleton mb-2" />
-                <div className="h-3 w-32 bg-gray-100 rounded skeleton" />
+                <div className="h-2 w-full bg-gray-100 dark:bg-slate-800 rounded-full skeleton mb-2" />
+                <div className="h-3 w-32 bg-gray-100 dark:bg-slate-800 rounded skeleton" />
               </div>
             ))}
           </div>
         ) : budgets.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 shadow-sm text-center">
-            <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
-              <Target size={28} className="text-gray-300" />
+          <div className="bg-white dark:bg-slate-900 rounded-xl p-12 shadow-sm text-center">
+            <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4">
+              <Target size={28} className="text-gray-300 dark:text-slate-600" />
             </div>
-            <h3 className="text-base font-semibold text-gray-900 mb-1">No budgets set</h3>
-            <p className="text-sm text-gray-500 mb-4 max-w-xs mx-auto">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-1">No budgets set</h3>
+            <p className="text-sm text-gray-500 dark:text-slate-400 mb-4 max-w-xs mx-auto">
               Create category budgets to track spending limits for your group.
             </p>
             <button
@@ -1030,21 +1031,21 @@ function AdminDashboardView({
       {/* Member Budget Table */}
       {members.length > 0 && budgets.length > 0 && (
         <div>
-          <h2 className="text-base font-semibold text-gray-900 mb-3">Member spending vs. budgets</h2>
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-3">Member spending vs. budgets</h2>
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-50/60">
-                    <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Member</th>
+                  <tr className="bg-gray-50/60 dark:bg-slate-800/60">
+                    <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Member</th>
                     {budgets.map(b => (
-                      <th key={b.category} className="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <th key={b.category} className="px-5 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                         {getEmoji(b.category)} {b.category}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
                   {memberStats.map((m) => {
                     const memberCategorySpend = {};
                     thisMonthExpenses
@@ -1054,20 +1055,20 @@ function AdminDashboardView({
                         memberCategorySpend[cat] = (memberCategorySpend[cat] || 0) + (e.amount || 0);
                       });
                     return (
-                      <tr key={m.id || m.phone} className="hover:bg-gray-50/50 transition-colors">
+                      <tr key={m.id || m.phone} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors">
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-2">
                             <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold ${getAvatarColor(m.name)}`}>
                               {getInitials(m.name)}
                             </div>
-                            <span className="text-sm font-medium text-gray-900">{m.name}</span>
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">{m.name}</span>
                           </div>
                         </td>
                         {budgets.map(b => {
                           const spent = memberCategorySpend[b.category?.toLowerCase()] || 0;
                           return (
                             <td key={b.category} className="px-5 py-3 text-right text-sm">
-                              <span className={`font-medium ${spent > 0 ? 'text-gray-900' : 'text-gray-300'}`}>
+                              <span className={`font-medium ${spent > 0 ? 'text-gray-900 dark:text-white' : 'text-gray-300 dark:text-slate-600'}`}>
                                 {formatCurrency(spent, currency)}
                               </span>
                             </td>
@@ -1115,54 +1116,54 @@ function AdminDashboardView({
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
             Manage your personal profile and display preferences
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Card */}
-          <div className="bg-white rounded-xl shadow-sm p-6 lg:col-span-2 space-y-6">
-            <h2 className="text-base font-bold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6 lg:col-span-2 space-y-6">
+            <h2 className="text-base font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               👤 Personal Profile
             </h2>
             <form onSubmit={handleSaveProfile} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">My Full Name</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1.5">My Full Name</label>
                 <input
                   type="text"
                   value={profileName}
                   onChange={e => setProfileName(e.target.value)}
                   placeholder="e.g., Rahul Sharma"
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all text-gray-900 font-medium"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 dark:border-slate-700 rounded-xl bg-gray-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all text-gray-900 dark:text-white font-medium"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1.5">Phone Number</label>
                 <input
                   type="text"
                   value={user?.phone || '—'}
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-100 text-gray-500 font-mono focus:outline-none cursor-not-allowed"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 dark:border-slate-700 rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 font-mono focus:outline-none cursor-not-allowed"
                   disabled
                 />
-                <p className="text-[10px] text-gray-400 mt-1">Phone number cannot be modified as it is used for WhatsApp verification.</p>
+                <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-1">Phone number cannot be modified as it is used for WhatsApp verification.</p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Gender</label>
                 <div className="flex gap-4">
                   {['Male', 'Female', 'Other'].map(g => (
-                    <label key={g} className="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700">
+                    <label key={g} className="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700 dark:text-slate-300">
                       <input
                         type="radio"
                         name="gender"
                         value={g}
                         checked={profileGender === g}
                         onChange={() => setProfileGender(g)}
-                        className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-gray-300"
+                        className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 dark:border-slate-600 dark:bg-slate-800"
                       />
                       {g}
                     </label>
@@ -1171,19 +1172,19 @@ function AdminDashboardView({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Profile Photo URL</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1.5">Profile Photo URL</label>
                 <input
                   type="url"
                   value={profilePhotoUrl}
                   onChange={e => setProfilePhotoUrl(e.target.value)}
                   placeholder="e.g., https://example.com/photo.jpg"
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all text-gray-900 font-medium"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 dark:border-slate-700 rounded-xl bg-gray-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all text-gray-900 dark:text-white font-medium"
                 />
-                <p className="text-[10px] text-gray-400 mt-1">Provide a link to an image to use as your avatar profile photo.</p>
+                <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-1">Provide a link to an image to use as your avatar profile photo.</p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Or Choose an Avatar Preset</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Or Choose an Avatar Preset</label>
                 <div className="flex gap-3 flex-wrap">
                   {[
                     { name: 'Boy 1', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Felix' },
@@ -1197,7 +1198,7 @@ function AdminDashboardView({
                       type="button"
                       onClick={() => setProfilePhotoUrl(preset.url)}
                       className={`p-1 rounded-xl border-2 transition-all ${
-                        profilePhotoUrl === preset.url ? 'border-emerald-600 bg-emerald-50' : 'border-transparent bg-gray-50 hover:bg-gray-100'
+                        profilePhotoUrl === preset.url ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950' : 'border-transparent bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700'
                       }`}
                     >
                       <img src={preset.url} alt={preset.name} className="w-10 h-10 rounded-lg object-cover" style={{ width: '40px', height: '40px' }} />
@@ -1218,15 +1219,15 @@ function AdminDashboardView({
           </div>
 
           {/* Theme Preferences */}
-          <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
-            <h2 className="text-base font-bold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6 space-y-6">
+            <h2 className="text-base font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               🎨 Preferences
             </h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-800">Dark Mode Theme</h3>
-                  <p className="text-xs text-gray-400 mt-0.5">Toggle high-contrast dark theme</p>
+                  <h3 className="text-sm font-semibold text-gray-800 dark:text-slate-200">Dark Mode Theme</h3>
+                  <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">Toggle high-contrast dark theme</p>
                 </div>
                 <button
                   type="button"
@@ -1256,7 +1257,7 @@ function AdminDashboardView({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <Sidebar
         activeTab={activeTab}
         onTabChange={(tab) => { setActiveTab(tab); setExpensePage(1); }}
@@ -1627,10 +1628,10 @@ export default function AdminDashboard() {
   // If loading crucial data, show spinner
   if (groupLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-paper">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 rounded-full border-[3px] border-green border-t-transparent animate-spin"></div>
-          <p className="text-ink-muted text-sm">Loading...</p>
+          <div className="w-10 h-10 rounded-full border-[3px] border-emerald-600 border-t-transparent animate-spin"></div>
+          <p className="text-gray-500 dark:text-slate-400 text-sm">Loading...</p>
         </div>
       </div>
     );

@@ -33,7 +33,11 @@ export function getAllCategories() {
 }
 
 export function getCategoryColor(category) {
-  return categoryColors[category] || '#6b7280';
+  if (!category) return '#6b7280';
+  const match = Object.keys(categoryColors).find(
+    k => k.toLowerCase() === category.toLowerCase()
+  );
+  return match ? categoryColors[match] : '#6b7280';
 }
 
 export default categoryEmoji;

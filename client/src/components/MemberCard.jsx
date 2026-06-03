@@ -10,16 +10,16 @@ function getInitials(name) {
 }
 
 function getAvatarColor(name) {
-  if (!name) return { bg: '#e5e7eb', text: '#6b7280' };
+  if (!name) return 'bg-gray-200 text-gray-500 dark:bg-slate-700 dark:text-slate-400';
   const palette = [
-    { bg: '#d1fae5', text: '#065f46' },
-    { bg: '#dbeafe', text: '#1e40af' },
-    { bg: '#ede9fe', text: '#5b21b6' },
-    { bg: '#ffedd5', text: '#9a3412' },
-    { bg: '#fce7f3', text: '#9d174d' },
-    { bg: '#cffafe', text: '#155e75' },
-    { bg: '#fef3c7', text: '#92400e' },
-    { bg: '#e0e7ff', text: '#3730a3' },
+    'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400',
+    'bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-400',
+    'bg-purple-100 text-purple-800 dark:bg-purple-950/40 dark:text-purple-400',
+    'bg-orange-100 text-orange-800 dark:bg-orange-950/40 dark:text-orange-400',
+    'bg-pink-100 text-pink-800 dark:bg-pink-950/40 dark:text-pink-400',
+    'bg-cyan-100 text-cyan-800 dark:bg-cyan-950/40 dark:text-cyan-400',
+    'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400',
+    'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-400',
   ];
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -33,9 +33,9 @@ function getProgressColor(percentage) {
 }
 
 function getProgressTrackColor(percentage) {
-  if (percentage >= 90) return 'bg-red-100';
-  if (percentage >= 70) return 'bg-amber-100';
-  return 'bg-emerald-100';
+  if (percentage >= 90) return 'bg-red-100 dark:bg-red-950/30';
+  if (percentage >= 70) return 'bg-amber-100 dark:bg-amber-950/30';
+  return 'bg-emerald-100 dark:bg-emerald-950/30';
 }
 
 export default function MemberCard({
@@ -79,12 +79,11 @@ export default function MemberCard({
   return (
     <>
       {/* Card */}
-      <div className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 group">
+      <div className="glass-card rounded-xl p-5 hover:shadow-md transition-all duration-200 group">
         <div className="flex items-center gap-4">
           {/* Avatar */}
           <div
-            className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold"
-            style={{ backgroundColor: avatarColor.bg, color: avatarColor.text }}
+            className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${avatarColor}`}
           >
             {getInitials(member.name)}
           </div>
@@ -92,23 +91,23 @@ export default function MemberCard({
           {/* Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="text-sm font-semibold text-gray-900 truncate">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                 {member.name || 'Unknown'}
               </h3>
               {member.role && (
                 <span
                   className={`text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide ${
                     member.role === 'admin'
-                      ? 'bg-amber-50 text-amber-700'
-                      : 'bg-gray-100 text-gray-600'
+                      ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400'
+                      : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400'
                   }`}
                 >
                   {member.role}
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-3 text-xs text-gray-500">
-              <span className="font-medium text-gray-900 text-base">
+            <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-slate-500">
+              <span className="font-semibold text-gray-900 dark:text-white text-base">
                 {formatCurrency(spent, currency)}
               </span>
               <span>·</span>
@@ -123,7 +122,7 @@ export default function MemberCard({
                   style={{ width: `${percentage}%` }}
                 />
               </div>
-              <p className="text-[10px] text-gray-400 mt-1">
+              <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-1">
                 {percentage.toFixed(0)}% of group total
               </p>
             </div>
@@ -145,29 +144,28 @@ export default function MemberCard({
         <div className="fixed inset-0 z-50 flex justify-end">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setPanelOpen(false)}
           />
 
           {/* Panel */}
-          <div className="relative w-full max-w-md bg-white shadow-2xl flex flex-col slide-panel-enter">
+          <div className="relative w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl flex flex-col slide-panel-enter">
             {/* Panel Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
-                  style={{ backgroundColor: avatarColor.bg, color: avatarColor.text }}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${avatarColor}`}
                 >
                   {getInitials(member.name)}
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-gray-900">{member.name}</h2>
-                  <p className="text-xs text-gray-500">{member.phone || ''}</p>
+                  <h2 className="text-base font-bold text-gray-900 dark:text-white">{member.name}</h2>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">{member.phone || ''}</p>
                 </div>
               </div>
               <button
                 onClick={() => setPanelOpen(false)}
-                className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-all"
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-all"
               >
                 <X size={20} />
               </button>
@@ -179,8 +177,8 @@ export default function MemberCard({
                 onClick={() => setActiveMonthTab('this')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   activeMonthTab === 'this'
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'text-gray-500 hover:bg-gray-50'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400'
+                    : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'
                 }`}
               >
                 This Month
@@ -189,8 +187,8 @@ export default function MemberCard({
                 onClick={() => setActiveMonthTab('last')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   activeMonthTab === 'last'
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'text-gray-500 hover:bg-gray-50'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400'
+                    : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'
                 }`}
               >
                 Last Month
@@ -201,8 +199,8 @@ export default function MemberCard({
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-2">
               {filteredExpenses.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <Calendar size={32} className="text-gray-200 mb-3" />
-                  <p className="text-sm text-gray-500">
+                  <Calendar size={32} className="text-gray-200 dark:text-slate-700 mb-3" />
+                  <p className="text-sm text-gray-500 dark:text-slate-400">
                     No expenses {activeMonthTab === 'this' ? 'this month' : 'last month'}
                   </p>
                 </div>
@@ -210,22 +208,22 @@ export default function MemberCard({
                 filteredExpenses.map((expense, idx) => (
                   <div
                     key={expense.id || idx}
-                    className="flex items-center gap-3 py-3 px-3 rounded-xl hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 py-3 px-3 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center text-base flex-shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-gray-50 dark:bg-slate-800 flex items-center justify-center text-base flex-shrink-0">
                       {getEmoji(expense.category)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                         {expense.description || 'Expense'}
                       </p>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">
                         {expense.created_at
                           ? format(new Date(expense.created_at), 'dd MMM, h:mm a')
                           : '—'}
                       </p>
                     </div>
-                    <span className="text-sm font-semibold text-gray-900 flex-shrink-0">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white flex-shrink-0">
                       {formatCurrency(expense.amount, currency)}
                     </span>
                   </div>
@@ -234,12 +232,12 @@ export default function MemberCard({
             </div>
 
             {/* Panel Footer */}
-            <div className="border-t border-gray-100 px-6 py-4">
+            <div className="border-t border-gray-100 dark:border-slate-800 px-6 py-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 dark:text-slate-400">
                   {activeMonthTab === 'this' ? 'This month' : 'Last month'} total
                 </span>
-                <span className="text-lg font-bold text-gray-900">
+                <span className="text-lg font-bold text-gray-900 dark:text-white">
                   {formatCurrency(
                     filteredExpenses.reduce((sum, e) => sum + (e.amount || 0), 0),
                     currency

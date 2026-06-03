@@ -341,7 +341,7 @@ export default function Login() {
       </div>
 
       {/* Right Panel — Login Form */}
-      <div className="lg:w-[60%] w-full bg-white flex items-center justify-center px-6 py-12 lg:py-0">
+      <div className="lg:w-[60%] w-full bg-white dark:bg-slate-950 flex items-center justify-center px-6 py-12 lg:py-0">
         <div className="w-full max-w-[420px]">
           {/* Demo mode badge */}
           {demoMode && (
@@ -354,14 +354,14 @@ export default function Login() {
           {profileSetupStep ? (
             /* Profile Setup Step */
             <div className="fade-in">
-              <h2 className="text-3xl font-bold text-ink mb-2">Set Up Your Profile</h2>
-              <p className="text-ink-muted text-[15px] mb-8">
+              <h2 className="text-3xl font-bold text-ink dark:text-white mb-2">Set Up Your Profile</h2>
+              <p className="text-ink-muted dark:text-slate-400 text-[15px] mb-8">
                 Tell us a bit about yourself before we open your dashboard
               </p>
 
               <form onSubmit={handleSaveProfile} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-semibold text-ink-soft mb-2">
+                  <label className="block text-sm font-semibold text-ink-soft dark:text-slate-300 mb-2">
                     Your Full Name
                   </label>
                   <input
@@ -369,21 +369,21 @@ export default function Login() {
                     value={profileName}
                     onChange={(e) => setProfileName(e.target.value)}
                     placeholder="E.g., Karan Sharma"
-                    className="w-full px-4 py-3 text-sm border-2 border-border rounded-xl outline-none focus:border-green focus:ring-2 focus:ring-green-light transition-all bg-white font-semibold text-gray-900"
+                    className="w-full px-4 py-3 text-sm border-2 border-border rounded-xl outline-none focus:border-green focus:ring-2 focus:ring-green-light transition-all bg-white dark:bg-slate-900 dark:border-slate-700 font-semibold text-gray-900 dark:text-white"
                     required
                     autoFocus
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-ink-soft mb-2.5">
+                  <label className="block text-sm font-semibold text-ink-soft dark:text-slate-300 mb-2.5">
                     Gender
                   </label>
                   <div className="flex gap-4">
                     {['Male', 'Female', 'Other'].map((genderOption) => (
                       <label
                         key={genderOption}
-                        className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-gray-700 dark:text-gray-350"
+                        className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-gray-700 dark:text-slate-300"
                       >
                         <input
                           type="radio"
@@ -427,26 +427,26 @@ export default function Login() {
           ) : !otpSent ? (
             /* Phone Number Step */
             <div className="fade-in">
-              <h2 className="text-3xl font-bold text-ink mb-2">Welcome back</h2>
-              <p className="text-ink-muted text-[15px] mb-8">
+              <h2 className="text-3xl font-bold text-ink dark:text-white mb-2">Welcome back</h2>
+              <p className="text-ink-muted dark:text-slate-400 text-[15px] mb-8">
                 Enter your phone number to continue
               </p>
 
               <form onSubmit={handleSendOtp}>
-                <label className="block text-sm font-semibold text-ink-soft mb-2">
+                <label className="block text-sm font-semibold text-ink-soft dark:text-slate-300 mb-2">
                   Phone Number
                 </label>
-                <div className="flex items-center border-2 border-border rounded-xl overflow-hidden focus-within:border-green transition-colors bg-white">
-                  <div className="flex items-center gap-1.5 px-4 py-3.5 bg-gray-50 border-r border-border">
+                <div className="flex items-center border-2 border-border dark:border-slate-700 rounded-xl overflow-hidden focus-within:border-green transition-colors bg-white dark:bg-slate-900">
+                  <div className="flex items-center gap-1.5 px-4 py-3.5 bg-gray-50 dark:bg-slate-800 border-r border-border dark:border-slate-700">
                     <span className="text-lg">🇮🇳</span>
-                    <span className="text-ink-soft font-semibold text-sm">+91</span>
+                    <span className="text-ink-soft dark:text-slate-300 font-semibold text-sm">+91</span>
                   </div>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                     placeholder="98765 43210"
-                    className="flex-1 px-4 py-3.5 text-ink text-[16px] font-medium outline-none bg-transparent placeholder:text-ink-muted/50"
+                    className="flex-1 px-4 py-3.5 text-ink dark:text-white text-[16px] font-medium outline-none bg-transparent dark:bg-transparent placeholder:text-ink-muted/50"
                     maxLength={10}
                     autoFocus
                   />
@@ -508,17 +508,17 @@ export default function Login() {
                   setOtp(['', '', '', '', '', '']);
                   setError('');
                 }}
-                className="mb-6 flex items-center gap-1 text-ink-muted text-sm font-medium hover:text-ink transition-colors"
+                className="mb-6 flex items-center gap-1 text-ink-muted dark:text-slate-400 text-sm font-medium hover:text-ink dark:hover:text-white transition-colors"
               >
                 <ArrowRight className="w-4 h-4 rotate-180" />
                 <span>Change number</span>
               </button>
 
-              <h2 className="text-3xl font-bold text-ink mb-2">Verify OTP</h2>
-              <p className="text-ink-muted text-[15px] mb-1">
+              <h2 className="text-3xl font-bold text-ink dark:text-white mb-2">Verify OTP</h2>
+              <p className="text-ink-muted dark:text-slate-400 text-[15px] mb-1">
                 We sent a 6-digit code to
               </p>
-              <p className="text-ink font-semibold text-[15px] mb-8">
+              <p className="text-ink dark:text-white font-semibold text-[15px] mb-8">
                 +91 {phone.slice(0, 5)} {phone.slice(5)}
               </p>
 
@@ -535,7 +535,7 @@ export default function Login() {
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(index, e)}
                     onFocus={(e) => e.target.select()}
-                    className="w-12 h-14 text-center text-xl font-bold text-ink border-2 border-border rounded-xl outline-none focus:border-green focus:ring-2 focus:ring-green-light transition-all duration-150 bg-white"
+                    className="w-12 h-14 text-center text-xl font-bold text-ink dark:text-white border-2 border-border dark:border-slate-700 rounded-xl outline-none focus:border-green focus:ring-2 focus:ring-green-light transition-all duration-150 bg-white dark:bg-slate-900"
                     autoFocus={index === 0}
                   />
                 ))}

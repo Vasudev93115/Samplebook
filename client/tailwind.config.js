@@ -1,8 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     './index.html',
     './src/**/*.{js,jsx}'
+  ],
+  safelist: [
+    'bg-red-500',
+    'bg-amber-500',
+    'bg-emerald-500',
+    'bg-red-100',
+    'bg-amber-100',
+    'bg-emerald-100',
+    'bg-[#10b981]',
+    'text-[#10b981]'
   ],
   theme: {
     extend: {

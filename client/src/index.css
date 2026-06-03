@@ -5,19 +5,19 @@
 :root {
   --green: #1a6b47;
   --green-mid: #2d9462;
-  --green-light: #e8f5ee;
+  --green-light: #eafcf3;
   --red: #dc2626;
   --orange: #ea580c;
   --ink: #111827;
   --ink-soft: #374151;
   --ink-muted: #6b7280;
-  --paper: #f3f4f6;
+  --paper: #f8fafc;
   --card: #ffffff;
-  --border: #e5e7eb;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
-  --radius: 12px;
-  --radius-sm: 8px;
+  --border: rgba(16, 185, 129, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.06);
+  --radius: 16px;
+  --radius-sm: 10px;
 }
 
 * {
@@ -45,6 +45,24 @@ body {
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
   border-radius: var(--radius-sm);
+}
+
+/* ==========================================
+   GLASS CARD — Premium surfaces
+   ========================================== */
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(16, 185, 129, 0.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.emerald-glow {
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
+}
+.emerald-glow:hover {
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.18);
+  transform: translateY(-1px);
 }
 
 /* Toast slide in */
@@ -121,22 +139,39 @@ body {
 .progress-orange { background-color: #ea580c; }
 .progress-red { background-color: #dc2626; }
 
-/* Dark Mode Theme overrides */
+/* ==========================================
+   DARK MODE THEME
+   ========================================== */
 .dark {
   --ink: #f1f5f9;
   --ink-soft: #cbd5e1;
   --ink-muted: #94a3b8;
-  --paper: #0b1120;
-  --card: #111827;
-  --border: #1e293b;
-  --green-light: #0d2b1e;
-  background-color: #0b1120;
+  --paper: #09090b;
+  --card: rgba(15, 23, 42, 0.7);
+  --border: rgba(16, 185, 129, 0.15);
+  --green-light: #002112;
+  background-color: #09090b;
   color: #f1f5f9;
 }
 
 .dark body {
-  background-color: #0b1120;
+  background-color: #09090b;
   color: #f1f5f9;
+}
+
+.dark .glass-card {
+  background-color: rgba(15, 23, 42, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(16, 185, 129, 0.18) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .emerald-glow {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.12) !important;
+}
+.dark .emerald-glow:hover {
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.28) !important;
+  transform: translateY(-1px);
 }
 
 /* ==========================================
@@ -144,35 +179,38 @@ body {
    ========================================== */
 .dark .bg-white {
   background-color: var(--card) !important;
+  border-color: var(--border) !important;
 }
 .dark .bg-paper,
 .dark .bg-gray-50 {
-  background-color: #0f172a !important;
+  background-color: var(--paper) !important;
 }
 .dark .bg-gray-50\/30 {
-  background-color: rgba(15, 23, 42, 0.3) !important;
+  background-color: rgba(9, 9, 11, 0.3) !important;
 }
 .dark .bg-gray-50\/60 {
-  background-color: rgba(15, 23, 42, 0.6) !important;
+  background-color: rgba(9, 9, 11, 0.6) !important;
 }
 .dark .bg-gray-100 {
-  background-color: #1e293b !important;
+  background-color: #18181b !important;
   color: var(--ink-soft) !important;
 }
 .dark .bg-gray-200 {
-  background-color: #1e293b !important;
+  background-color: #27272a !important;
 }
 
 /* ==========================================
    TEXT COLOR OVERRIDES
    ========================================== */
 .dark .text-ink { color: #f1f5f9 !important; }
+.dark .text-ink-soft { color: #cbd5e1 !important; }
+.dark .text-ink-muted { color: #94a3b8 !important; }
 .dark .text-gray-900 { color: #f1f5f9 !important; }
 .dark .text-gray-800 { color: #e2e8f0 !important; }
 .dark .text-gray-700 { color: #cbd5e1 !important; }
 .dark .text-gray-600 { color: #cbd5e1 !important; }
 .dark .text-gray-500 { color: #94a3b8 !important; }
-.dark .text-gray-400 { color: #94a3b8 !important; }
+.dark .text-gray-400 { color: #64748b !important; }
 
 /* ==========================================
    BORDER OVERRIDES
@@ -181,10 +219,10 @@ body {
 .dark .border-gray-100,
 .dark .border-gray-200,
 .dark .border-gray-300 {
-  border-color: #1e293b !important;
+  border-color: rgba(16, 185, 129, 0.15) !important;
 }
 .dark .border-b {
-  border-color: #1e293b !important;
+  border-color: rgba(16, 185, 129, 0.12) !important;
 }
 .dark .divide-gray-50 > :not([hidden]) ~ :not([hidden]),
 .dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
@@ -202,6 +240,9 @@ body {
 .dark .hover\:bg-gray-50:hover {
   background-color: #1e293b !important;
 }
+.dark .hover\:bg-gray-100:hover {
+  background-color: #1e293b !important;
+}
 .dark .hover\:bg-gray-200:hover {
   background-color: #2e3748 !important;
 }
@@ -210,6 +251,9 @@ body {
 }
 .dark .hover\:bg-emerald-50\/40:hover {
   background-color: rgba(45, 148, 98, 0.15) !important;
+}
+.dark .hover\:bg-red-50:hover {
+  background-color: rgba(220, 38, 38, 0.15) !important;
 }
 
 /* ==========================================
@@ -322,9 +366,84 @@ body {
   color: #34d399 !important;
 }
 
+/* Blue alerts/badges */
+.dark .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+.dark .text-blue-700 {
+  color: #93c5fd !important;
+}
+
+/* Rose/red color in dark */
+.dark .bg-rose-50 {
+  background-color: rgba(244, 63, 94, 0.12) !important;
+}
+.dark .text-rose-600 {
+  color: #fb7185 !important;
+}
+
+/* Amber icon bg */
+.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+}
+.dark .text-amber-600 {
+  color: #fbbf24 !important;
+}
+
 /* Green-light background used in onboarding cards */
 .dark .bg-green-light {
   background-color: #0d2b1e !important;
+}
+
+/* Avatar backgrounds in dark mode */
+.dark .bg-emerald-100 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+.dark .bg-blue-100 {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+}
+.dark .bg-purple-100 {
+  background-color: rgba(139, 92, 246, 0.15) !important;
+}
+.dark .bg-orange-100 {
+  background-color: rgba(249, 115, 22, 0.15) !important;
+}
+.dark .bg-pink-100 {
+  background-color: rgba(236, 72, 153, 0.15) !important;
+}
+.dark .bg-cyan-100 {
+  background-color: rgba(6, 182, 212, 0.15) !important;
+}
+.dark .bg-amber-100 {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+}
+.dark .bg-indigo-100 {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+}
+/* Avatar text colors in dark mode */
+.dark .text-emerald-700 {
+  color: #34d399 !important;
+}
+.dark .text-blue-700 {
+  color: #93c5fd !important;
+}
+.dark .text-purple-700 {
+  color: #a78bfa !important;
+}
+.dark .text-orange-700 {
+  color: #fb923c !important;
+}
+.dark .text-pink-700 {
+  color: #f472b6 !important;
+}
+.dark .text-cyan-700 {
+  color: #22d3ee !important;
+}
+.dark .text-amber-700 {
+  color: #fbbf24 !important;
+}
+.dark .text-indigo-700 {
+  color: #818cf8 !important;
 }
 
 /* ==========================================
@@ -401,10 +520,23 @@ body {
 }
 
 /* ==========================================
-   MOBILE RESPONSIVE OVERRIDES
+   RECHARTS TOOLTIP OVERRIDES (dark mode)
    ========================================== */
+.dark .recharts-default-tooltip {
+  background-color: #0f172a !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+}
+.dark .recharts-tooltip-label {
+  color: #f1f5f9 !important;
+}
+.dark .recharts-tooltip-item {
+  color: #cbd5e1 !important;
+}
 
-/* Fix missing animation class used in MemberCard */
+/* ==========================================
+   ANIMATION UTILITIES
+   ========================================== */
 @keyframes slidePanelEnter {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
@@ -421,7 +553,9 @@ body {
   }
 }
 
-/* Mobile-first responsive adjustments */
+/* ==========================================
+   MOBILE RESPONSIVE OVERRIDES
+   ========================================== */
 @media (max-width: 640px) {
   /* Tighter padding on summary cards */
   .summary-card {
@@ -472,4 +606,3 @@ body {
     opacity: 1 !important;
   }
 }
-

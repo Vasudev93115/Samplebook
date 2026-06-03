@@ -9,10 +9,11 @@ export default function SummaryCard({
   iconBg = 'bg-emerald-50',
   iconColor = 'text-emerald-600',
   loading = false,
+  isGlow = false,
 }) {
   if (loading) {
     return (
-      <div className="bg-white rounded-xl p-6 shadow-sm">
+      <div className="glass-card rounded-xl p-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="h-4 w-24 bg-gray-200 rounded skeleton mb-3" />
@@ -26,13 +27,23 @@ export default function SummaryCard({
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default group">
-      <div className="flex items-start justify-between">
+    <div className={`glass-card rounded-xl p-6 relative overflow-hidden transition-all duration-300 group cursor-default ${
+      isGlow ? 'emerald-glow' : ''
+    }`}>
+      {/* Absolute decorative accent background */}
+      <div className={`absolute top-0 right-0 w-24 h-24 opacity-[0.03] rounded-bl-full pointer-events-none transition-all duration-300 group-hover:scale-110 ${
+        title.toLowerCase().includes('in') ? 'bg-[#10b981]' : title.toLowerCase().includes('out') ? 'bg-rose-500' : 'bg-primary'
+      }`} />
+      
+      <div className="flex items-start justify-between relative z-10">
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-500 mb-1 truncate">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 tracking-tight">{value}</p>
+          <p className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">{title}</p>
+          <p className={`text-2xl font-bold tracking-tight ${
+            title.toLowerCase().includes('in') ? 'text-emerald-600 dark:text-emerald-400' : 
+            title.toLowerCase().includes('out') ? 'text-rose-600 dark:text-rose-400' : 'text-gray-900 dark:text-white'
+          }`}>{value}</p>
           {subtitle && (
-            <p className="text-sm text-gray-500 mt-1 truncate">{subtitle}</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1 truncate">{subtitle}</p>
           )}
           {trend && (
             <div

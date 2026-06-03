@@ -15,15 +15,15 @@ function CustomTooltip({ active, payload, currency }) {
   if (!active || !payload?.length) return null;
   const data = payload[0].payload;
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-100 px-4 py-3">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 px-4 py-3">
       <div className="flex items-center gap-2 text-sm">
         <span className="text-base">{getEmoji(data.name)}</span>
-        <span className="font-medium text-gray-900 capitalize">{data.name}</span>
+        <span className="font-medium text-gray-900 dark:text-white capitalize">{data.name}</span>
       </div>
-      <p className="text-sm font-bold text-gray-900 mt-1">
+      <p className="text-sm font-bold text-gray-900 dark:text-white mt-1">
         {formatCurrency(data.value, currency)}
       </p>
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-gray-500 dark:text-slate-400">
         {data.percentage}% of total
       </p>
     </div>
@@ -43,10 +43,10 @@ function CustomLegend({ payload, currency, isMobile }) {
             className="w-3 h-3 rounded-full flex-shrink-0"
             style={{ backgroundColor: entry.color }}
           />
-          <span className="text-gray-600 capitalize flex-1 truncate">
+          <span className="text-gray-600 dark:text-slate-300 capitalize flex-1 truncate">
             {getEmoji(entry.value)} {entry.value}
           </span>
-          <span className="font-medium text-gray-900 flex-shrink-0 text-xs">
+          <span className="font-medium text-gray-900 dark:text-white flex-shrink-0 text-xs">
             {formatCurrency(entry.payload?.value, currency)}
           </span>
         </div>
@@ -55,14 +55,14 @@ function CustomLegend({ payload, currency, isMobile }) {
   );
 }
 
-function CenterLabel({ viewBox, total, currency }) {
+function CenterLabel({ viewBox, total, currency, isDarkMode }) {
   const { cx, cy } = viewBox;
   return (
     <g>
-      <text x={cx} y={cy - 6} textAnchor="middle" className="fill-gray-400 text-[10px]">
+      <text x={cx} y={cy - 6} textAnchor="middle" fill={isDarkMode ? '#94a3b8' : '#9ca3af'} className="text-[10px]">
         Total
       </text>
-      <text x={cx} y={cy + 14} textAnchor="middle" className="fill-gray-900 text-sm font-bold">
+      <text x={cx} y={cy + 14} textAnchor="middle" fill={isDarkMode ? '#f1f5f9' : '#111827'} className="text-sm font-bold">
         {formatCurrency(total, currency)}
       </text>
     </g>
@@ -81,6 +81,19 @@ export default function CategoryDonut({
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.documentElement.classList.contains('dark')
+  );
+
+  useEffect(() => {
+    const el = document.documentElement;
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(el.classList.contains('dark'));
+    });
+    observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
   }, []);
 
   const { chartData, total } = useMemo(() => {
@@ -109,8 +122,8 @@ export default function CategoryDonut({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="h-5 w-40 bg-gray-200 rounded skeleton mb-6" />
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6">
+        <div className="h-5 w-40 bg-gray-200 dark:bg-slate-700 rounded skeleton mb-6" />
         <div className="flex items-center justify-center">
           <div className="w-48 h-48 rounded-full bg-gray-100 skeleton" />
         </div>
@@ -120,8 +133,8 @@ export default function CategoryDonut({
 
   if (!chartData.length) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="text-base font-semibold text-gray-900 mb-4">
+      <div className="glass-card rounded-xl p-6">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
           Spending by category
         </h3>
         <div className="h-64 flex flex-col items-center justify-center text-center">
@@ -135,8 +148,8 @@ export default function CategoryDonut({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <h3 className="text-base font-semibold text-gray-900 mb-4">
+    <div className="glass-card rounded-xl p-6">
+      <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
         Spending by category
       </h3>
       <div className="h-72">
@@ -156,7 +169,7 @@ export default function CategoryDonut({
                 <Cell key={index} fill={entry.color} />
               ))}
               <Label
-                content={<CenterLabel total={total} currency={currency} />}
+                content={<CenterLabel total={total} currency={currency} isDarkMode={isDarkMode} />}
                 position="center"
               />
             </Pie>

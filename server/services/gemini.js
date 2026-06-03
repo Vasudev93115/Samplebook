@@ -58,6 +58,14 @@ RULES:
 6. Confidence: Set between 0.85 and 1.0 for both debit (spending/bills) and credit (added cash/income) transactions if the amount and description are clearly mentioned. Set below 0.5 only if highly ambiguous.
 
 EXAMPLES:
+- "250 petrol scooty 100 sabzi" -> [
+    {"amount": 250, "category": "Fuel", "description": "Scooty petrol", "transaction_type": "debit", "confidence": 0.95},
+    {"amount": 100, "category": "Groceries", "description": "sabzi", "transaction_type": "debit", "confidence": 0.95}
+  ]
+- "scooty me 250 ka petrol dalwaya aur 100 ki sabzi li" -> [
+    {"amount": 250, "category": "Fuel", "description": "Scooty petrol", "transaction_type": "debit", "confidence": 0.95},
+    {"amount": 100, "category": "Groceries", "description": "sabzi", "transaction_type": "debit", "confidence": 0.95}
+  ]
 - "Paid ₹120 to Ramu Tea Stall and salary received 25000" -> [
     {"amount": 120, "category": "Food & Dining", "description": "Paid to Ramu Tea Stall", "transaction_type": "debit", "confidence": 0.95},
     {"amount": 25000, "category": "Other", "description": "Salary received", "transaction_type": "credit", "confidence": 0.95}

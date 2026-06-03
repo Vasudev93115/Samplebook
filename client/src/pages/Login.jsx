@@ -79,6 +79,20 @@ export default function Login() {
     }
   }, [user, profileSetupStep, demoMode]);
 
+  const cleanAuthError = (message) => {
+    if (!message) return 'Failed to send OTP. Please try again.';
+    const msg = message.toLowerCase();
+    if (msg.includes('security purposes') || msg.includes('rate limit') || msg.includes('request this once')) {
+      const match = message.match(/(\d+(\.\d+)?)/);
+      if (match) {
+        const seconds = Math.ceil(parseFloat(match[0]));
+        return `⏳ For security, please wait ${seconds} second${seconds > 1 ? 's' : ''} before requesting another OTP.`;
+      }
+      return '⏳ For security, please wait a moment before requesting another OTP.';
+    }
+    return message;
+  };
+
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setError('');
@@ -94,7 +108,7 @@ export default function Login() {
     const { error: otpError } = await signInWithOtp(fullPhone);
 
     if (otpError) {
-      setError(otpError.message || 'Failed to send OTP. Please try again.');
+      setError(cleanAuthError(otpError.message));
     } else {
       setOtpSent(true);
     }

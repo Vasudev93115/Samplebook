@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wallet, CheckCircle, ArrowRight, Phone, Shield, Loader2 } from 'lucide-react';
+import { Wallet, CheckCircle, ArrowRight, ArrowLeft, Phone, Shield, Loader2 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useGroup } from '../hooks/useGroup';
 import supabase from '../lib/supabase';
@@ -82,6 +82,12 @@ export default function Login() {
   const cleanAuthError = (message) => {
     if (!message) return 'Failed to send OTP. Please try again.';
     const msg = message.toLowerCase();
+    
+    // Intercept Supabase webhook timeout / cold start errors
+    if (msg.includes('failed to reach hook') || msg.includes('hook timeout') || msg.includes('maximum time of') || msg.includes('5.000000 seconds')) {
+      return '⚡ The OTP service is taking longer than usual. Please try requesting again in a few seconds.';
+    }
+
     if (msg.includes('security purposes') || msg.includes('rate limit') || msg.includes('request this once')) {
       const match = message.match(/(\d+(\.\d+)?)/);
       if (match) {
@@ -176,7 +182,7 @@ export default function Login() {
     const { data: verifyData, error: verifyError } = await verifyOtp(fullPhone, code);
 
     if (verifyError) {
-      setError(verifyError.message || 'Invalid OTP. Please try again.');
+      setError(cleanAuthError(verifyError.message || 'Invalid OTP. Please try again.'));
       setOtp(['', '', '', '', '', '']);
       otpRefs[0]?.current?.focus();
     } else {
@@ -280,9 +286,13 @@ export default function Login() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <div className="min-h-screen flex flex-col lg:flex-row relative bg-gradient-to-br from-slate-50 to-emerald-50/20 dark:from-[#09090b] dark:to-[#0f172a] overflow-hidden">
+      {/* Background glow blobs at screen level */}
+      <div className="glow-blob bg-emerald-500 w-[400px] h-[400px] -top-40 -left-40 opacity-[0.06] dark:opacity-[0.03]"></div>
+      <div className="glow-blob bg-teal-500 w-[500px] h-[500px] -bottom-40 -right-40 opacity-[0.06] dark:opacity-[0.03]"></div>
+
       {/* Left Panel — Brand */}
-      <div className="relative lg:w-[40%] w-full bg-gradient-to-br from-[#1a6b47] via-[#15573b] to-[#0d4a2f] px-8 py-12 lg:py-0 lg:px-12 flex flex-col justify-center overflow-hidden">
+      <div className="relative lg:w-[40%] w-full bg-gradient-to-br from-[#1a6b47] via-[#15573b] to-[#0d4a2f] px-8 py-16 lg:py-0 lg:px-12 flex flex-col justify-center overflow-hidden shadow-2xl z-10">
         {/* Decorative shapes */}
         <div className="absolute top-[-60px] right-[-60px] w-[200px] h-[200px] rounded-full bg-white/[0.04]"></div>
         <div className="absolute bottom-[-80px] left-[-40px] w-[260px] h-[260px] rounded-full bg-white/[0.03]"></div>
@@ -292,7 +302,7 @@ export default function Login() {
         <div className="relative z-10">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center border border-white/20">
+            <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-lg">
               <Wallet className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -321,28 +331,42 @@ export default function Login() {
           </div>
 
           {/* Stats ribbon */}
-          <div className="mt-12 flex gap-8">
+          <div className="mt-12 p-5 bg-white/5 border border-white/10 rounded-2xl flex justify-between gap-4 backdrop-blur-sm">
             <div>
-              <div className="text-white text-2xl font-bold">10K+</div>
-              <div className="text-white/50 text-xs font-medium">Active Users</div>
+              <div className="text-white text-xl font-bold">10K+</div>
+              <div className="text-white/60 text-[10px] font-semibold uppercase tracking-wider">Active Users</div>
             </div>
-            <div className="w-px bg-white/20"></div>
+            <div className="w-px bg-white/10"></div>
             <div>
-              <div className="text-white text-2xl font-bold">₹2Cr+</div>
-              <div className="text-white/50 text-xs font-medium">Tracked Monthly</div>
+              <div className="text-white text-xl font-bold">₹2Cr+</div>
+              <div className="text-white/60 text-[10px] font-semibold uppercase tracking-wider">Tracked</div>
             </div>
-            <div className="w-px bg-white/20"></div>
+            <div className="w-px bg-white/10"></div>
             <div>
-              <div className="text-white text-2xl font-bold">4.8★</div>
-              <div className="text-white/50 text-xs font-medium">User Rating</div>
+              <div className="text-white text-xl font-bold">4.8★</div>
+              <div className="text-white/60 text-[10px] font-semibold uppercase tracking-wider">Rating</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Right Panel — Login Form */}
-      <div className="lg:w-[60%] w-full bg-white dark:bg-slate-950 flex items-center justify-center px-6 py-12 lg:py-0">
-        <div className="w-full max-w-[420px]">
+      <div className="relative lg:w-[60%] w-full flex items-center justify-center px-6 py-12 lg:py-0 z-10">
+        {/* Ambient glows inside right panel */}
+        <div className="glow-blob bg-emerald-400 w-80 h-80 top-1/4 right-10 opacity-[0.08] dark:opacity-[0.04]"></div>
+        <div className="glow-blob bg-teal-400 w-80 h-80 bottom-1/4 left-10 opacity-[0.08] dark:opacity-[0.04]"></div>
+
+        {/* Back to Home Button */}
+        <button
+          onClick={() => navigate('/')}
+          className="absolute top-6 left-6 z-20 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full border border-emerald-500/10 dark:border-emerald-500/20 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md text-ink-soft dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:border-emerald-500/20 hover:scale-102 shadow-sm transition-all duration-200"
+          title="Back to Landing Page"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-xs font-semibold">Home</span>
+        </button>
+
+        <div className="w-full max-w-[440px] glass-card rounded-2xl p-6 sm:p-8 relative z-10 shadow-xl shadow-emerald-950/[0.01]">
           {/* Demo mode badge */}
           {demoMode && (
             <div className="mb-6 flex items-center gap-2 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-[10px]">
@@ -494,7 +518,7 @@ export default function Login() {
                   <span className="text-xs font-medium">256-bit SSL</span>
                 </div>
                 <div className="w-1 h-1 rounded-full bg-ink-muted/30"></div>
-                <span className="text-xs font-medium">No spam, ever</span>
+                <span className="text-xs font-medium">No spam</span>
                 <div className="w-1 h-1 rounded-full bg-ink-muted/30"></div>
                 <span className="text-xs font-medium">Free forever</span>
               </div>
@@ -510,7 +534,7 @@ export default function Login() {
                 }}
                 className="mb-6 flex items-center gap-1 text-ink-muted dark:text-slate-400 text-sm font-medium hover:text-ink dark:hover:text-white transition-colors"
               >
-                <ArrowRight className="w-4 h-4 rotate-180" />
+                <ArrowLeft className="w-4 h-4" />
                 <span>Change number</span>
               </button>
 

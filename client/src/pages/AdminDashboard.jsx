@@ -115,7 +115,7 @@ function AddMemberModal({ open, onClose, onAdd, group }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden dark:border dark:border-slate-800">
+      <div className="relative glass-card rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
@@ -280,7 +280,7 @@ function BudgetModal({ open, onClose, onSave, editBudget = null }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden dark:border dark:border-slate-800">
+      <div className="relative glass-card rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">
             {editBudget ? 'Edit Budget' : 'Add Budget'}
@@ -359,7 +359,7 @@ function BudgetCard({ budget, spent = 0, currency = 'INR', onEdit, onDelete }) {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900/70 rounded-xl p-5 shadow-sm hover:shadow-md dark:border dark:border-slate-800/40 transition-all duration-200 group">
+    <div className="glass-card rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 group">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <span className="text-2xl">{getEmoji(budget.category)}</span>
@@ -664,7 +664,7 @@ function AdminDashboardView({
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm">
+              <div key={i} className="glass-card rounded-xl p-5 shadow-sm">
                 <div className="flex items-center gap-4">
                   <div className="w-11 h-11 rounded-full bg-gray-200 dark:bg-slate-700 skeleton" />
                   <div className="flex-1">
@@ -676,7 +676,7 @@ function AdminDashboardView({
             ))}
           </div>
         ) : memberStats.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm text-center">
+          <div className="glass-card rounded-xl p-8 shadow-sm text-center">
             <Users size={32} className="text-gray-200 dark:text-slate-600 mx-auto mb-3" />
             <p className="text-sm text-gray-500 dark:text-slate-400">No members in this group yet</p>
           </div>
@@ -803,7 +803,7 @@ function AdminDashboardView({
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm">
+            <div key={i} className="glass-card rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-4">
                 <div className="w-11 h-11 rounded-full bg-gray-200 dark:bg-slate-700 skeleton" />
                 <div className="flex-1">
@@ -815,7 +815,7 @@ function AdminDashboardView({
           ))}
         </div>
       ) : members.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 rounded-xl p-12 shadow-sm text-center">
+        <div className="glass-card rounded-xl p-12 shadow-sm text-center">
           <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4">
             <Users size={28} className="text-gray-300 dark:text-slate-600" />
           </div>
@@ -832,7 +832,7 @@ function AdminDashboardView({
           </button>
         </div>
       ) : (
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm overflow-hidden">
+        <div className="glass-card rounded-xl shadow-sm overflow-hidden">
           {/* Desktop Table */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
@@ -979,7 +979,7 @@ function AdminDashboardView({
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm">
+              <div key={i} className="glass-card rounded-xl p-5 shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-gray-200 dark:bg-slate-700 rounded-xl skeleton" />
                   <div>
@@ -993,7 +993,7 @@ function AdminDashboardView({
             ))}
           </div>
         ) : budgets.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 rounded-xl p-12 shadow-sm text-center">
+          <div className="glass-card rounded-xl p-12 shadow-sm text-center">
             <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4">
               <Target size={28} className="text-gray-300 dark:text-slate-600" />
             </div>
@@ -1032,7 +1032,7 @@ function AdminDashboardView({
       {members.length > 0 && budgets.length > 0 && (
         <div>
           <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-3">Member spending vs. budgets</h2>
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm overflow-hidden">
+          <div className="glass-card rounded-xl shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -1124,7 +1124,7 @@ function AdminDashboardView({
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Card */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6 lg:col-span-2 space-y-6">
+          <div className="glass-card rounded-xl shadow-sm p-6 lg:col-span-2 space-y-6">
             <h2 className="text-base font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               👤 Personal Profile
             </h2>
@@ -1219,7 +1219,7 @@ function AdminDashboardView({
           </div>
 
           {/* Theme Preferences */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6 space-y-6">
+          <div className="glass-card rounded-xl shadow-sm p-6 space-y-6">
             <h2 className="text-base font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               🎨 Preferences
             </h2>
@@ -1257,7 +1257,7 @@ function AdminDashboardView({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
+    <div className="min-h-screen bg-transparent">
       <Sidebar
         activeTab={activeTab}
         onTabChange={(tab) => { setActiveTab(tab); setExpensePage(1); }}
@@ -1628,7 +1628,7 @@ export default function AdminDashboard() {
   // If loading crucial data, show spinner
   if (groupLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full border-[3px] border-emerald-600 border-t-transparent animate-spin"></div>
           <p className="text-gray-500 dark:text-slate-400 text-sm">Loading...</p>

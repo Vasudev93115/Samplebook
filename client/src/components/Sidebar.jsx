@@ -61,7 +61,7 @@ export default function Sidebar({
     <>
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden md:flex flex-col fixed left-0 top-0 h-screen bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 shadow-sm z-40 transition-all duration-300 ${
+        className={`hidden md:flex flex-col fixed left-0 top-0 h-screen bg-white/70 dark:bg-slate-950/60 backdrop-blur-xl border-r border-emerald-500/10 dark:border-emerald-500/10 shadow-sm z-40 transition-all duration-300 ${
           collapsed ? 'w-[72px]' : 'w-64'
         }`}
       >
@@ -184,7 +184,7 @@ export default function Sidebar({
       </aside>
 
       {/* Mobile Bottom Tab Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-950 border-t border-gray-200 dark:border-slate-800 z-40 px-1" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/85 dark:bg-slate-950/70 backdrop-blur-xl border-t border-emerald-500/10 z-40 px-1" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <div className="flex items-center justify-around h-16">
           {filteredNavItems.map((item) => {
             const isActive = activeTab === item.id;
@@ -209,7 +209,7 @@ export default function Sidebar({
       </nav>
 
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 bg-white dark:bg-slate-950 border-b border-gray-100 dark:border-slate-800 z-40 px-4 py-3 flex items-center justify-between">
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-white/85 dark:bg-slate-950/70 backdrop-blur-xl border-b border-emerald-500/10 z-40 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
             <Wallet size={16} className="text-white" />

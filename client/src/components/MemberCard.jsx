@@ -149,7 +149,7 @@ export default function MemberCard({
           />
 
           {/* Panel */}
-          <div className="relative w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl flex flex-col slide-panel-enter">
+          <div className="relative w-full max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-l border-emerald-500/10 dark:border-emerald-500/20 shadow-2xl flex flex-col slide-panel-enter">
             {/* Panel Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
               <div className="flex items-center gap-3">

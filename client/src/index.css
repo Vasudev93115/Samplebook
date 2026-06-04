@@ -28,11 +28,17 @@
 
 body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  background-color: var(--paper);
+  background: linear-gradient(135deg, #f8fafc 0%, #edfcf4 100%) !important;
+  background-attachment: fixed !important;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Base custom typography utilities */
+.text-ink { color: var(--ink) !important; }
+.text-ink-soft { color: var(--ink-soft) !important; }
+.text-ink-muted { color: var(--ink-muted) !important; }
 
 /* Skeleton shimmer animation */
 @keyframes shimmer {
@@ -51,9 +57,10 @@ body {
    GLASS CARD — Premium surfaces
    ========================================== */
 .glass-card {
-  background-color: rgba(255, 255, 255, 0.97);
-  border: 1px solid rgba(16, 185, 129, 0.08);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.12);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.01), 0 10px 30px rgba(26, 107, 71, 0.03);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -606,3 +613,63 @@ body {
     opacity: 1 !important;
   }
 }
+
+/* ==========================================
+   AMBIENT GLOWS & SCROLL REVEAL (3D UPGRADES)
+   ========================================== */
+@keyframes floatGlow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(45px, -65px) scale(1.18); }
+  66% { transform: translate(-35px, 50px) scale(0.85); }
+}
+
+.glow-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(130px);
+  opacity: 0.12;
+  animation: floatGlow 18s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark .glow-blob {
+  opacity: 0.08;
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================
+   ON-LOAD SPLASH AND STAGGERED REVEALS
+   ========================================== */
+@keyframes spinPulse {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.splash-spinner-icon {
+  animation: spinPulse 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.load-reveal {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.load-reveal.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+

@@ -373,7 +373,7 @@ export default function MemberDashboard() {
       {/* Charts section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Spending Trend Line Chart */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800/40 shadow-sm p-5 flex flex-col">
+        <div className="lg:col-span-2 glass-card rounded-xl shadow-sm p-5 flex flex-col">
           <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">My Daily Spend — Last 30 Days</h2>
           <div className="h-64 w-full flex-1">
             <SpendingTrend expenses={formattedExpenses} members={[activeUserProfile]} loading={expensesLoading} />
@@ -381,7 +381,7 @@ export default function MemberDashboard() {
         </div>
 
         {/* Category Pie Donut Chart */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800/40 shadow-sm p-5 flex flex-col">
+        <div className="glass-card rounded-xl shadow-sm p-5 flex flex-col">
           <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">My Spending by Category</h2>
           <div className="h-64 w-full flex-1 flex items-center justify-center">
             <CategoryDonut expenses={formattedExpenses} loading={expensesLoading} />
@@ -415,7 +415,7 @@ export default function MemberDashboard() {
         <div className="flex items-center gap-3">
           <button
             onClick={handleExportCSV}
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white dark:bg-slate-900 dark:text-slate-200 border border-gray-200 dark:border-slate-800 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 bg-white/60 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 shadow-sm transition-all"
           >
             <Download size={16} />
             Export CSV
@@ -449,7 +449,7 @@ export default function MemberDashboard() {
       {budgetsLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm">
+            <div key={i} className="glass-card rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-gray-200 rounded-xl skeleton" />
                 <div>
@@ -463,7 +463,7 @@ export default function MemberDashboard() {
           ))}
         </div>
       ) : budgets.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 rounded-xl p-12 shadow-sm text-center">
+        <div className="glass-card rounded-xl p-12 shadow-sm text-center">
           <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4">
             <Target size={28} className="text-gray-300 dark:text-slate-600" />
           </div>
@@ -476,7 +476,7 @@ export default function MemberDashboard() {
             return (
               <div
                 key={budget.id}
-                className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800/40 p-5 shadow-sm space-y-4 hover:shadow-md transition-all relative overflow-hidden"
+                className="glass-card rounded-2xl p-5 shadow-sm space-y-4 hover:shadow-md transition-all relative overflow-hidden"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -548,7 +548,7 @@ export default function MemberDashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Card */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6 lg:col-span-2 space-y-6 border border-gray-100 dark:border-slate-800/40">
+          <div className="glass-card rounded-xl shadow-sm p-6 lg:col-span-2 space-y-6">
             <h2 className="text-base font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               👤 Personal Profile
             </h2>
@@ -643,7 +643,7 @@ export default function MemberDashboard() {
           </div>
 
           {/* Theme Preferences */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm p-6 space-y-6 border border-gray-100 dark:border-slate-800/40">
+          <div className="glass-card rounded-xl shadow-sm p-6 space-y-6">
             <h2 className="text-base font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               🎨 Preferences
             </h2>
@@ -681,7 +681,7 @@ export default function MemberDashboard() {
 
   if (groupLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-paper dark:bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full border-[3px] border-green border-t-transparent animate-spin"></div>
           <p className="text-ink-muted text-sm">Loading...</p>
@@ -691,7 +691,7 @@ export default function MemberDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
+    <div className="min-h-screen bg-transparent">
       <Sidebar
         activeTab={activeTab}
         onTabChange={(tab) => { setActiveTab(tab); setExpensePage(1); }}

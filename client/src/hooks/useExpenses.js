@@ -74,13 +74,14 @@ export function useExpenses(groupId, options = {}) {
 
   const exportCSV = useCallback(() => {
     if (expenses.length === 0) return;
-    const headers = ['Entry Date', 'Member', 'Category', 'Description', 'Amount', 'Currency', 'Via'];
+    const headers = ['Entry Date', 'Member', 'Category', 'Description', 'Amount', 'Type', 'Currency', 'Via'];
     const rows = expenses.map(e => [
       e.created_at ? new Date(e.created_at).toLocaleString('en-IN') : '',
       e.users?.name || 'Unknown',
       e.category,
       e.description,
       e.amount,
+      e.transaction_type === 'credit' ? 'credit' : 'debit',
       e.currency,
       e.input_type
     ]);

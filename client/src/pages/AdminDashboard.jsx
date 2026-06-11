@@ -431,6 +431,7 @@ function AdminDashboardView({
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [memberFilter, setMemberFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
   const [editingBudget, setEditingBudget] = useState(null);
@@ -549,8 +550,22 @@ function AdminDashboardView({
     if (memberFilter) {
       list = list.filter(e => e.member_id === memberFilter || e.member_phone === memberFilter);
     }
+    if (typeFilter) {
+      list = list.filter(e => {
+        const t = e.transaction_type || 'debit';
+        return t === typeFilter;
+      });
+    }
     return list;
-  }, [expenses, searchQuery, categoryFilter, memberFilter]);
+  }, [expenses, searchQuery, categoryFilter, memberFilter, typeFilter]);
+
+  const filteredDebitTotal = useMemo(() => {
+    return filteredExpenses.filter(e => e.transaction_type !== 'credit').reduce((s, e) => s + Number(e.amount || 0), 0);
+  }, [filteredExpenses]);
+
+  const filteredCreditTotal = useMemo(() => {
+    return filteredExpenses.filter(e => e.transaction_type === 'credit').reduce((s, e) => s + Number(e.amount || 0), 0);
+  }, [filteredExpenses]);
 
   const paginatedExpenses = useMemo(() => {
     const start = (expensePage - 1) * perPage;
@@ -561,13 +576,14 @@ function AdminDashboardView({
 
   /* ---------- CSV export ---------- */
   const exportCSV = useCallback(() => {
-    const headers = ['Entry Date', 'Member', 'Description', 'Category', 'Amount', 'Source'];
+    const headers = ['Entry Date', 'Member', 'Description', 'Category', 'Amount', 'Type', 'Source'];
     const rows = filteredExpenses.map(e => [
       e.created_at ? format(new Date(e.created_at), 'yyyy-MM-dd HH:mm') : '',
       e.member_name || '',
       e.description || '',
       e.category || '',
       e.amount || 0,
+      e.transaction_type === 'credit' ? 'credit' : 'debit',
       e.source || '',
     ]);
     const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
@@ -587,9 +603,12 @@ function AdminDashboardView({
       const mExpenses = thisMonthExpenses.filter(
         e => e.member_id === m.id || e.member_phone === m.phone
       );
+      const debits = mExpenses.filter(e => e.transaction_type !== 'credit');
+      const credits = mExpenses.filter(e => e.transaction_type === 'credit');
       return {
         ...m,
-        total_spent: mExpenses.reduce((s, e) => s + (e.amount || 0), 0),
+        total_spent: debits.reduce((s, e) => s + Number(e.amount || 0), 0),
+        total_received: credits.reduce((s, e) => s + Number(e.amount || 0), 0),
         transaction_count: mExpenses.length,
       };
     });
@@ -766,6 +785,23 @@ function AdminDashboardView({
         </div>
       </div>
 
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="glass-card rounded-xl p-4 shadow-sm bg-white/60 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Filtered Spent (Debit)</p>
+          <p className="text-lg font-bold text-rose-600 dark:text-rose-400 mt-1">{formatCurrency(filteredDebitTotal, currency)}</p>
+        </div>
+        <div className="glass-card rounded-xl p-4 shadow-sm bg-white/60 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Filtered Received (Credit)</p>
+          <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-1">{formatCurrency(filteredCreditTotal, currency)}</p>
+        </div>
+        <div className="glass-card rounded-xl p-4 shadow-sm bg-white/60 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Net Filtered Balance</p>
+          <p className={`text-lg font-bold mt-1 ${(filteredCreditTotal - filteredDebitTotal) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+            {(filteredCreditTotal - filteredDebitTotal) >= 0 ? '+' : ''}{formatCurrency(filteredCreditTotal - filteredDebitTotal, currency)}
+          </p>
+        </div>
+      </div>
+
       <ExpenseTable
         expenses={paginatedExpenses}
         loading={loading}
@@ -775,6 +811,7 @@ function AdminDashboardView({
         onSearch={setSearchQuery}
         onCategoryFilter={setCategoryFilter}
         onMemberFilter={setMemberFilter}
+        onTypeFilter={setTypeFilter}
         members={members}
         showMember
         currency={currency}
@@ -841,7 +878,8 @@ function AdminDashboardView({
                   <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Member</th>
                   <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Phone</th>
                   <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Role</th>
-                  <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">This Month</th>
+                  <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Spent (Out)</th>
+                  <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Received (In)</th>
                   <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Txns</th>
                   <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Actions</th>
                 </tr>
@@ -855,7 +893,7 @@ function AdminDashboardView({
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold ${getAvatarColor(m.name)}`}>
-                          {getInitials(m.name)}
+                           {getInitials(m.name)}
                         </div>
                         <span className="text-sm font-medium text-gray-900 dark:text-white">{m.name}</span>
                       </div>
@@ -871,8 +909,13 @@ function AdminDashboardView({
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                      <span className="text-sm font-semibold text-rose-600 dark:text-rose-400">
                         {formatCurrency(m.total_spent, currency)}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-right">
+                      <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                        {formatCurrency(m.total_received, currency)}
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-right">
@@ -921,8 +964,9 @@ function AdminDashboardView({
                 </div>
                 <div className="text-right flex items-center gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatCurrency(m.total_spent, currency)}</p>
-                    <p className="text-xs text-gray-500 dark:text-slate-400">{m.transaction_count} txns</p>
+                    <p className="text-xs font-semibold text-rose-600 dark:text-rose-400">-{formatCurrency(m.total_spent, currency)}</p>
+                    <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">+{formatCurrency(m.total_received, currency)}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-slate-400">{m.transaction_count} txns</p>
                   </div>
                   {m.id !== user?.id && (
                     <button

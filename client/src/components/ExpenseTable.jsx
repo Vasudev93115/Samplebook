@@ -86,6 +86,7 @@ export default function ExpenseTable({
   onSearch,
   onCategoryFilter,
   onMemberFilter,
+  onTypeFilter,
   members = [],
   showMember = true,
   compact = false,
@@ -94,6 +95,7 @@ export default function ExpenseTable({
   const [searchValue, setSearchValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [memberValue, setMemberValue] = useState('');
+  const [typeValue, setTypeValue] = useState('');
 
   const categories = useMemo(() => getAllCategories(), []);
 
@@ -110,6 +112,11 @@ export default function ExpenseTable({
   const handleMemberFilter = (e) => {
     setMemberValue(e.target.value);
     onMemberFilter?.(e.target.value);
+  };
+
+  const handleTypeFilter = (e) => {
+    setTypeValue(e.target.value);
+    onTypeFilter?.(e.target.value);
   };
 
   // Loading State
@@ -206,6 +213,18 @@ export default function ExpenseTable({
                     {getEmoji(cat)} {cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            <div className="relative">
+              <select
+                value={typeValue}
+                onChange={handleTypeFilter}
+                className="appearance-none pl-4 pr-8 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all cursor-pointer font-medium"
+              >
+                <option value="">All Types</option>
+                <option value="debit">Debit (Cash-Out)</option>
+                <option value="credit">Credit (Cash-In)</option>
               </select>
             </div>
 

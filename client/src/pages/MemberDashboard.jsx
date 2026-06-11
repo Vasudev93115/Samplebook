@@ -50,6 +50,7 @@ export default function MemberDashboard() {
   const [expensePage, setExpensePage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
   const [addExpenseOpen, setAddExpenseOpen] = useState(false);
 
   const [profileName, setProfileName] = useState(user?.name || '');
@@ -269,8 +270,22 @@ export default function MemberDashboard() {
     if (categoryFilter) {
       list = list.filter(e => e.category === categoryFilter);
     }
+    if (typeFilter) {
+      list = list.filter(e => {
+        const t = e.transaction_type || 'debit';
+        return t === typeFilter;
+      });
+    }
     return list;
-  }, [formattedExpenses, searchQuery, categoryFilter]);
+  }, [formattedExpenses, searchQuery, categoryFilter, typeFilter]);
+
+  const filteredDebitTotal = useMemo(() => {
+    return filteredExpenses.filter(e => e.transaction_type !== 'credit').reduce((s, e) => s + Number(e.amount || 0), 0);
+  }, [filteredExpenses]);
+
+  const filteredCreditTotal = useMemo(() => {
+    return filteredExpenses.filter(e => e.transaction_type === 'credit').reduce((s, e) => s + Number(e.amount || 0), 0);
+  }, [filteredExpenses]);
 
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredExpenses.length / itemsPerPage);
@@ -281,12 +296,13 @@ export default function MemberDashboard() {
 
   // Export CSV
   const handleExportCSV = () => {
-    const headers = ['Entry Date', 'Description', 'Category', 'Amount', 'Source'];
+    const headers = ['Entry Date', 'Description', 'Category', 'Amount', 'Type', 'Source'];
     const rows = filteredExpenses.map(e => [
       e.created_at ? format(new Date(e.created_at), 'yyyy-MM-dd HH:mm') : '',
       e.description || '',
       e.category || '',
       e.amount || 0,
+      e.transaction_type === 'credit' ? 'credit' : 'debit',
       e.source || ''
     ]);
 
@@ -423,6 +439,23 @@ export default function MemberDashboard() {
         </div>
       </div>
 
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="glass-card rounded-xl p-4 shadow-sm bg-white/60 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Filtered Spent (Debit)</p>
+          <p className="text-lg font-bold text-rose-600 dark:text-rose-400 mt-1">{formatCurrency(filteredDebitTotal, group?.currency || 'INR')}</p>
+        </div>
+        <div className="glass-card rounded-xl p-4 shadow-sm bg-white/60 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Filtered Received (Credit)</p>
+          <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-1">{formatCurrency(filteredCreditTotal, group?.currency || 'INR')}</p>
+        </div>
+        <div className="glass-card rounded-xl p-4 shadow-sm bg-white/60 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Net Filtered Balance</p>
+          <p className={`text-lg font-bold mt-1 ${(filteredCreditTotal - filteredDebitTotal) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+            {(filteredCreditTotal - filteredDebitTotal) >= 0 ? '+' : ''}{formatCurrency(filteredCreditTotal - filteredDebitTotal, group?.currency || 'INR')}
+          </p>
+        </div>
+      </div>
+
       <ExpenseTable
         expenses={paginatedExpenses}
         loading={expensesLoading}
@@ -431,6 +464,7 @@ export default function MemberDashboard() {
         onPageChange={setExpensePage}
         onSearch={setSearchQuery}
         onCategoryFilter={setCategoryFilter}
+        onTypeFilter={setTypeFilter}
         showMember={false}
         currency={group?.currency}
       />

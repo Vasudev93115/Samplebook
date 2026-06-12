@@ -51,6 +51,7 @@ export default function MemberDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
+  const [dateRange, setDateRange] = useState({ start: null, end: null });
   const [addExpenseOpen, setAddExpenseOpen] = useState(false);
 
   const [profileName, setProfileName] = useState(user?.name || '');
@@ -276,8 +277,14 @@ export default function MemberDashboard() {
         return t === typeFilter;
       });
     }
+    if (dateRange.start) {
+      list = list.filter(e => e.created_at && new Date(e.created_at) >= dateRange.start);
+    }
+    if (dateRange.end) {
+      list = list.filter(e => e.created_at && new Date(e.created_at) <= dateRange.end);
+    }
     return list;
-  }, [formattedExpenses, searchQuery, categoryFilter, typeFilter]);
+  }, [formattedExpenses, searchQuery, categoryFilter, typeFilter, dateRange]);
 
   const filteredDebitTotal = useMemo(() => {
     return filteredExpenses.filter(e => e.transaction_type !== 'credit').reduce((s, e) => s + Number(e.amount || 0), 0);
@@ -465,6 +472,7 @@ export default function MemberDashboard() {
         onSearch={setSearchQuery}
         onCategoryFilter={setCategoryFilter}
         onTypeFilter={setTypeFilter}
+        onDateRangeFilter={(start, end) => setDateRange({ start, end })}
         showMember={false}
         currency={group?.currency}
       />

@@ -87,6 +87,7 @@ export default function ExpenseTable({
   onCategoryFilter,
   onMemberFilter,
   onTypeFilter,
+  onDateRangeFilter,
   members = [],
   showMember = true,
   compact = false,
@@ -96,8 +97,47 @@ export default function ExpenseTable({
   const [categoryValue, setCategoryValue] = useState('');
   const [memberValue, setMemberValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
+  
+  const [dateRangeOption, setDateRangeOption] = useState('all');
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
 
   const categories = useMemo(() => getAllCategories(), []);
+
+  const calculateRangeDates = (option) => {
+    const now = new Date();
+    let start = null;
+    let end = null;
+    
+    switch (option) {
+      case 'today':
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+        end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        break;
+      case 'yesterday':
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 0, 0, 0, 0);
+        end = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 23, 59, 59, 999);
+        break;
+      case 'this_week': {
+        const day = now.getDay();
+        const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+        start = new Date(now.getFullYear(), now.getMonth(), diff, 0, 0, 0, 0);
+        end = new Date(now.getFullYear(), now.getMonth(), diff + 6, 23, 59, 59, 999);
+        break;
+      }
+      case 'this_month':
+        start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+        break;
+      case 'last_month':
+        start = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0, 0);
+        end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+        break;
+      default:
+        break;
+    }
+    return { start, end };
+  };
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
@@ -117,6 +157,42 @@ export default function ExpenseTable({
   const handleTypeFilter = (e) => {
     setTypeValue(e.target.value);
     onTypeFilter?.(e.target.value);
+  };
+
+  const handleDateRangeOptionChange = (e) => {
+    const option = e.target.value;
+    setDateRangeOption(option);
+    
+    if (option !== 'custom') {
+      const { start, end } = calculateRangeDates(option);
+      onDateRangeFilter?.(start, end);
+    } else {
+      const start = customStartDate ? new Date(customStartDate) : null;
+      if (start) start.setHours(0, 0, 0, 0);
+      const end = customEndDate ? new Date(customEndDate) : null;
+      if (end) end.setHours(23, 59, 59, 999);
+      onDateRangeFilter?.(start, end);
+    }
+  };
+
+  const handleCustomStartDateChange = (e) => {
+    const val = e.target.value;
+    setCustomStartDate(val);
+    const start = val ? new Date(val) : null;
+    if (start) start.setHours(0, 0, 0, 0);
+    const end = customEndDate ? new Date(customEndDate) : null;
+    if (end) end.setHours(23, 59, 59, 999);
+    onDateRangeFilter?.(start, end);
+  };
+
+  const handleCustomEndDateChange = (e) => {
+    const val = e.target.value;
+    setCustomEndDate(val);
+    const start = customStartDate ? new Date(customStartDate) : null;
+    if (start) start.setHours(0, 0, 0, 0);
+    const end = val ? new Date(val) : null;
+    if (end) end.setHours(23, 59, 59, 999);
+    onDateRangeFilter?.(start, end);
   };
 
   // Loading State
@@ -227,6 +303,42 @@ export default function ExpenseTable({
                 <option value="credit">Credit (Cash-In)</option>
               </select>
             </div>
+
+            <div className="relative">
+              <select
+                value={dateRangeOption}
+                onChange={handleDateRangeOptionChange}
+                className="appearance-none pl-4 pr-8 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all cursor-pointer font-medium"
+              >
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="this_week">This Week</option>
+                <option value="this_month">This Month</option>
+                <option value="last_month">Last Month</option>
+                <option value="custom">Custom Range...</option>
+              </select>
+            </div>
+
+            {dateRangeOption === 'custom' && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <input
+                  type="date"
+                  value={customStartDate}
+                  onChange={handleCustomStartDateChange}
+                  className="px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all font-medium text-gray-700"
+                  title="Start Date"
+                />
+                <span className="text-gray-400 text-xs font-semibold uppercase">to</span>
+                <input
+                  type="date"
+                  value={customEndDate}
+                  onChange={handleCustomEndDateChange}
+                  className="px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all font-medium text-gray-700"
+                  title="End Date"
+                />
+              </div>
+            )}
 
             {showMember && members.length > 0 && (
               <div className="relative">

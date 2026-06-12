@@ -432,6 +432,7 @@ function AdminDashboardView({
   const [categoryFilter, setCategoryFilter] = useState('');
   const [memberFilter, setMemberFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
+  const [dateRange, setDateRange] = useState({ start: null, end: null });
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
   const [editingBudget, setEditingBudget] = useState(null);
@@ -556,8 +557,14 @@ function AdminDashboardView({
         return t === typeFilter;
       });
     }
+    if (dateRange.start) {
+      list = list.filter(e => e.created_at && new Date(e.created_at) >= dateRange.start);
+    }
+    if (dateRange.end) {
+      list = list.filter(e => e.created_at && new Date(e.created_at) <= dateRange.end);
+    }
     return list;
-  }, [expenses, searchQuery, categoryFilter, memberFilter, typeFilter]);
+  }, [expenses, searchQuery, categoryFilter, memberFilter, typeFilter, dateRange]);
 
   const filteredDebitTotal = useMemo(() => {
     return filteredExpenses.filter(e => e.transaction_type !== 'credit').reduce((s, e) => s + Number(e.amount || 0), 0);
@@ -812,6 +819,7 @@ function AdminDashboardView({
         onCategoryFilter={setCategoryFilter}
         onMemberFilter={setMemberFilter}
         onTypeFilter={setTypeFilter}
+        onDateRangeFilter={(start, end) => setDateRange({ start, end })}
         members={members}
         showMember
         currency={currency}

@@ -424,6 +424,7 @@ function AdminDashboardView({
   onEditBudget,
   onDeleteBudget,
   onAddExpense,
+  onDeleteExpense,
   onUpdateProfile,
 }) {
   const [activeTab, setActiveTab] = useState('overview');
@@ -760,6 +761,7 @@ function AdminDashboardView({
           members={members}
           page={1}
           totalPages={1}
+          onDelete={onDeleteExpense}
         />
       </div>
     </div>
@@ -820,6 +822,7 @@ function AdminDashboardView({
         onMemberFilter={setMemberFilter}
         onTypeFilter={setTypeFilter}
         onDateRangeFilter={(start, end) => setDateRange({ start, end })}
+        onDelete={onDeleteExpense}
         members={members}
         showMember
         currency={currency}
@@ -1351,11 +1354,15 @@ export default function AdminDashboard() {
     expenses,
     loading: expensesLoading,
     addExpense,
+    removeExpense,
     refresh: refreshExpenses
   } = useExpenses(group?.id, { perPage: 1000 });
 
   const [budgets, setBudgets] = useState([]);
   const [budgetsLoading, setBudgetsLoading] = useState(true);
+
+  let toast = { addToast: () => {} };
+  try { toast = useToast(); } catch (e) { /* toast not available */ }
 
   // Sync real-time expenses
   const handleNewExpense = useCallback((expense) => {
@@ -1641,6 +1648,44 @@ export default function AdminDashboard() {
     }
   };
 
+  // Delete Expense via server API (bypasses RLS)
+  const handleDeleteExpense = async (expenseId) => {
+    if (!expenseId) return;
+
+    if (demoMode) {
+      removeExpense(expenseId);
+      toast.addToast('Expense deleted successfully! (Demo Mode)', 'success');
+      return;
+    }
+
+    try {
+      const getBackendUrl = () => {
+        const envUrl = import.meta.env.VITE_APP_URL;
+        if (envUrl && !envUrl.includes('5173')) return envUrl;
+        const host = window.location.hostname;
+        const protocol = window.location.protocol;
+        return `${protocol}//${host}:3000`;
+      };
+
+      const backendUrl = getBackendUrl();
+      const response = await fetch(`${backendUrl}/api/expense/${expenseId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to delete expense');
+      }
+
+      removeExpense(expenseId);
+      toast.addToast('Expense deleted successfully!', 'success');
+    } catch (err) {
+      console.error('Error deleting expense:', err);
+      toast.addToast(err.message || 'Failed to delete expense. Please try again.', 'error');
+    }
+  };
+
   // Update Profile
   const handleUpdateProfile = async (profileData) => {
     if (demoMode) {
@@ -1733,6 +1778,7 @@ export default function AdminDashboard() {
       onEditBudget={handleEditBudget}
       onDeleteBudget={handleDeleteBudget}
       onAddExpense={handleAddExpense}
+      onDeleteExpense={handleDeleteExpense}
       onUpdateProfile={handleUpdateProfile}
     />
   );

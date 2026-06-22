@@ -112,6 +112,16 @@ export function useExpenses(groupId, options = {}) {
     });
   }, []);
 
+  const removeExpense = useCallback((expenseId) => {
+    setExpenses(prev => {
+      const filtered = prev.filter(e => e.id !== expenseId);
+      if (filtered.length < prev.length) {
+        setTotalCount(c => c - 1);
+      }
+      return filtered;
+    });
+  }, []);
+
   return {
     expenses,
     loading,
@@ -120,6 +130,7 @@ export function useExpenses(groupId, options = {}) {
     totalPages: Math.ceil(totalCount / perPage),
     exportCSV,
     addExpense,
+    removeExpense,
     refresh: fetchExpenses
   };
 }

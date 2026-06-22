@@ -1,0 +1,1054 @@
+[
+  {
+    "id": "TC001",
+    "title": "Sign in with a phone number and complete profile setup",
+    "description": "This verifies that a valid phone-based login can proceed through OTP verification and profile setup before routing the user onward.",
+    "category": "Login Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with a valid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Enter the valid OTP code"
+      },
+      {
+        "type": "action",
+        "description": "Complete the profile setup fields"
+      },
+      {
+        "type": "action",
+        "description": "Submit the profile setup form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is routed to the appropriate authenticated destination"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Redirect unauthenticated visitors from member dashboard to login",
+    "description": "A visitor without an active session is redirected away from the member dashboard and cannot access protected content until signing in.",
+    "category": "Member Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /member"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login screen is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify member dashboard content is not displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Toggle the theme on the public site and keep it across navigation",
+    "description": "A guest can switch to dark mode on the public site and see the preference stay applied after moving to another public page.",
+    "category": "Theme System",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Toggle the theme to dark mode"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dark theme is applied"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the privacy policy"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dark theme remains applied"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Enter the app through demo mode",
+    "description": "This verifies that a user can access the product through demo mode and land in the appropriate authenticated area.",
+    "category": "Login Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Select demo mode access"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is redirected to an authenticated destination"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify protected app content is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Return a signed-in member to the member dashboard after login",
+    "description": "A signed-in member who starts from the protected member route is sent to login and then returned to the member dashboard after authentication.",
+    "category": "Member Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /member"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login screen is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the member dashboard is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Toggle the theme on the login page",
+    "description": "A guest can switch to light mode on the login page and see the UI update immediately across the app shell.",
+    "category": "Theme System",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Toggle the theme to light mode"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the light theme is applied"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Join onboarding with a valid invite code",
+    "description": "This verifies that a new authenticated user can join an existing group by invite code and is routed to the correct protected dashboard.",
+    "category": "Login Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credentials required for a new authenticated user"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Choose the option to join a group by invite code"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a valid invite code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the onboarding form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user reaches the correct authenticated dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the onboarding form is completed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Start onboarding by creating a new group",
+    "description": "This verifies that a newly authenticated user can choose to create a group during onboarding and reach the correct protected destination afterward.",
+    "category": "Login Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credentials required for a new authenticated user"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Choose the option to create a new group"
+      },
+      {
+        "type": "action",
+        "description": "Complete the onboarding details"
+      },
+      {
+        "type": "action",
+        "description": "Submit the onboarding form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user reaches the correct authenticated dashboard for the new group"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify onboarding completion content is no longer shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Load the admin dashboard after sign in",
+    "description": "This verifies that an authenticated admin can reach the dashboard and see the core analytics and management sections.",
+    "category": "Admin Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credentials required for an admin account"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the admin dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify summary cards, analytics charts, member information, and expense management content are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Create a new group from onboarding",
+    "description": "A new authenticated user can create a group from onboarding and is routed to the correct dashboard afterward.",
+    "category": "Onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the onboarding link if prompted after login"
+      },
+      {
+        "type": "action",
+        "description": "Choose to create a new group"
+      },
+      {
+        "type": "action",
+        "description": "Complete the group creation form with valid details"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the group is created"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is routed to the appropriate dashboard"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Join a group with a valid invite code",
+    "description": "A new authenticated user can join an existing group through onboarding and land on the member dashboard.",
+    "category": "Onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the onboarding link if prompted after login"
+      },
+      {
+        "type": "action",
+        "description": "Choose to join a group with an invite code"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a valid invite code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the join group form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the invite is accepted"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the member dashboard is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Use the member dashboard to add a new expense",
+    "description": "This verifies that a member can review their dashboard and submit a new expense that becomes visible in their personal ledger context.",
+    "category": "Admin Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credentials required for a member account"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Complete the add expense form with valid details"
+      },
+      {
+        "type": "action",
+        "description": "Submit the new expense"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new expense is shown in the group ledger or personal expense summary"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the member dashboard remains visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Open the member dashboard as an authenticated member",
+    "description": "An authenticated member can reach the member dashboard and see their personal summary, group ledger, and expense entry form.",
+    "category": "Member Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the member dashboard link if prompted after login"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify personal expense summary is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the group ledger and add expense form are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Reject an incorrect one-time code on login",
+    "description": "This verifies that an incorrect OTP is rejected and the user stays on the login flow with an authentication error.",
+    "category": "Login Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with a valid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Enter an incorrect OTP code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the OTP form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an authentication error is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login flow remains active"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Start signup from the landing page CTA",
+    "description": "A guest can move from the landing page into the login flow using the main call to action.",
+    "category": "Pricing Plans",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the primary signup call to action"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login screen is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Reject an invalid phone number on login",
+    "description": "This verifies that an invalid phone number is blocked and the user remains on the login page with validation feedback.",
+    "category": "Login Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with an invalid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a phone number validation error is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login page remains visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC017",
+    "title": "Block invalid expense submission on the member dashboard",
+    "description": "A member who submits incomplete or invalid expense details sees validation feedback and no expense is created.",
+    "category": "Member Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the member dashboard link if prompted after login"
+      },
+      {
+        "type": "action",
+        "description": "Submit the add expense form with incomplete required details"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an expense validation error is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no new expense entry is created"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC018",
+    "title": "Open the public homepage and reach the login page",
+    "description": "This verifies that a guest can view the landing page and use the primary path to reach the login experience.",
+    "category": "Landing Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the primary call to action to start login"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login page is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Submit an incomplete support contact form",
+    "description": "A guest submitting the contact form without required details sees validation feedback and the message is not submitted.",
+    "category": "Static Pages",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "action",
+        "description": "Submit the contact form without filling required fields"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation errors are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the message is not submitted"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "Show static pricing content on the landing page",
+    "description": "A guest can review the public pricing section and see the expected plan details on the landing page.",
+    "category": "Pricing Plans",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the pricing cards are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the plan limit and benefit details are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC021",
+    "title": "Review an empty expense search result on the admin dashboard",
+    "description": "This verifies that an admin can search or filter expenses to no matches and see an empty state instead of the normal table data.",
+    "category": "Admin Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credentials required for an admin account"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Use the expense search or filter controls to request no matching results"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty state is displayed for the expense table"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard remains available"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC022",
+    "title": "Keep invalid invite codes on onboarding",
+    "description": "An authenticated user who enters an invalid or expired invite code sees an error and remains on onboarding.",
+    "category": "Onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the onboarding link if prompted after login"
+      },
+      {
+        "type": "action",
+        "description": "Choose to join a group with an invite code"
+      },
+      {
+        "type": "action",
+        "description": "Fill in an invalid invite code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the join group form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an invite code error is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the onboarding screen remains visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC023",
+    "title": "Open contact support and submit a valid message",
+    "description": "This verifies that a guest can reach the support form and successfully submit a complete contact request.",
+    "category": "Landing Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the footer link for the contact page"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the contact form with valid details and a message"
+      },
+      {
+        "type": "action",
+        "description": "Submit the contact form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a successful submission confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the contact form is no longer in its initial state"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC024",
+    "title": "View the privacy policy",
+    "description": "A guest can open the privacy policy and return to the public site after reading it.",
+    "category": "Static Pages",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /privacy"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the privacy policy content is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to return to the public site"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the public landing page is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC025",
+    "title": "Review public policy pages from the homepage",
+    "description": "This verifies that a guest can move from the landing page to the privacy and terms pages through the footer navigation.",
+    "category": "Landing Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the footer link for the privacy page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the privacy page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the footer link for the terms page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the terms page is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC026",
+    "title": "View the terms of service",
+    "description": "A guest can open the terms page and then navigate to support contact for questions.",
+    "category": "Static Pages",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /terms"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the terms content is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to contact support"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the support contact page is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC027",
+    "title": "Show validation for an incomplete contact form",
+    "description": "This verifies that the contact page prevents submission when required information is missing and shows validation feedback.",
+    "category": "Landing Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "action",
+        "description": "Submit the contact form without completing required fields"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify contact form validation errors are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the form remains available for correction"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC028",
+    "title": "Use the default theme when saved theme data is invalid",
+    "description": "An authenticated user opening the dashboard with invalid saved theme data still sees the page render in the default theme.",
+    "category": "Theme System",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the default theme is applied"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC029",
+    "title": "Fall back to static pricing content when client pricing state is unavailable",
+    "description": "If pricing data does not populate from client state, the landing page still shows the built-in pricing content.",
+    "category": "Pricing Plans",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the pricing section is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the landing page still shows plan content"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC030",
+    "title": "See a public route miss handled on the site",
+    "description": "This verifies that an invalid public route is handled gracefully and the user stays within the public experience.",
+    "category": "Landing Page",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to an invalid public route"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a route miss or not found state is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the public site shell remains available"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC031",
+    "title": "Footer navigation links open correct pages",
+    "description": "Verify that all three footer links on the landing page (Privacy Policy, Terms of Service, Contact) navigate to the correct routes.",
+    "category": "Landing Page",
+    "priority": "High",
+    "steps": [
+      { "type": "action", "description": "Navigate to /" },
+      { "type": "action", "description": "Scroll to the footer section" },
+      { "type": "action", "description": "Click the Privacy Policy link in the footer" },
+      { "type": "assertion", "description": "Verify the URL changes to /privacy and the privacy policy page is displayed" },
+      { "type": "action", "description": "Navigate back to /" },
+      { "type": "action", "description": "Scroll to the footer and click the Terms of Service link" },
+      { "type": "assertion", "description": "Verify the URL changes to /terms and terms of service content is displayed" },
+      { "type": "action", "description": "Navigate back to /" },
+      { "type": "action", "description": "Scroll to the footer and click the Contact link" },
+      { "type": "assertion", "description": "Verify the URL changes to /contact and the contact form is displayed" }
+    ]
+  },
+  {
+    "id": "TC032",
+    "title": "Privacy policy page loads and displays content",
+    "description": "Verify that /privacy loads successfully and displays meaningful privacy policy content including headings.",
+    "category": "Static Pages",
+    "priority": "High",
+    "steps": [
+      { "type": "action", "description": "Navigate directly to /privacy" },
+      { "type": "assertion", "description": "Verify the page loads without errors" },
+      { "type": "assertion", "description": "Verify there is at least one heading visible on the page" },
+      { "type": "assertion", "description": "Verify the page contains privacy-related content such as data collection, user rights, or similar policy text" }
+    ]
+  },
+  {
+    "id": "TC033",
+    "title": "Terms of service page loads and displays content",
+    "description": "Verify that /terms loads successfully and shows terms of service content including relevant sections.",
+    "category": "Static Pages",
+    "priority": "High",
+    "steps": [
+      { "type": "action", "description": "Navigate directly to /terms" },
+      { "type": "assertion", "description": "Verify the page loads without errors" },
+      { "type": "assertion", "description": "Verify there is at least one heading visible on the page" },
+      { "type": "assertion", "description": "Verify the page contains terms-related content such as user responsibilities, limitations, or acceptable use" }
+    ]
+  },
+  {
+    "id": "TC034",
+    "title": "Contact form shows validation errors when submitted empty",
+    "description": "Verify that submitting the contact form with all fields empty triggers visible validation error messages and does not submit.",
+    "category": "Static Pages",
+    "priority": "High",
+    "steps": [
+      { "type": "action", "description": "Navigate to /contact" },
+      { "type": "assertion", "description": "Verify the contact form is displayed with name, email, and message fields" },
+      { "type": "action", "description": "Click the submit button without filling any field" },
+      { "type": "assertion", "description": "Verify validation error messages are shown for the required fields" },
+      { "type": "assertion", "description": "Verify the user remains on the /contact page and no success message is shown" }
+    ]
+  },
+  {
+    "id": "TC035",
+    "title": "Unknown route redirects to landing page",
+    "description": "Verify that navigating to a non-existent route (e.g. /nonexistent) redirects the user back to the landing page at /.",
+    "category": "Landing Page",
+    "priority": "High",
+    "steps": [
+      { "type": "action", "description": "Navigate to /this-route-does-not-exist" },
+      { "type": "assertion", "description": "Verify the user is redirected to the landing page at /" },
+      { "type": "assertion", "description": "Verify the landing page hero section is displayed" }
+    ]
+  },
+  {
+    "id": "TC036",
+    "title": "Login page Back to Home button navigates to landing page",
+    "description": "Verify that the Back to Home or back navigation button on the login page returns the user to the landing page.",
+    "category": "Login Page",
+    "priority": "High",
+    "steps": [
+      { "type": "action", "description": "Navigate to /login" },
+      { "type": "assertion", "description": "Verify the login page is displayed with a phone input" },
+      { "type": "action", "description": "Click the Back to Home or back arrow button" },
+      { "type": "assertion", "description": "Verify the user is navigated back to the landing page at /" },
+      { "type": "assertion", "description": "Verify the landing page hero section is visible" }
+    ]
+  },
+  {
+    "id": "TC037",
+    "title": "OTP input renders 6 individual digit boxes",
+    "description": "Verify that after a phone number is submitted on the login page, exactly 6 individual OTP input boxes appear for the user to enter the code.",
+    "category": "Login Page",
+    "priority": "High",
+    "steps": [
+      { "type": "action", "description": "Navigate to /login" },
+      { "type": "action", "description": "Enter a valid phone number in the phone input field (e.g. +919876543210)" },
+      { "type": "action", "description": "Click the Get OTP or Send OTP button" },
+      { "type": "assertion", "description": "Verify that 6 individual OTP digit input boxes are displayed on screen" },
+      { "type": "assertion", "description": "Verify the phone input step is no longer visible and the OTP step is shown" }
+    ]
+  },
+  {
+    "id": "TC038",
+    "title": "Dark mode preference is saved in localStorage",
+    "description": "Verify that toggling to dark mode on the landing page writes the value 'dark' to the samplebook_theme key in localStorage.",
+    "category": "Theme System",
+    "priority": "High",
+    "steps": [
+      { "type": "action", "description": "Navigate to /" },
+      { "type": "action", "description": "Find and click the theme toggle button to switch to dark mode" },
+      { "type": "assertion", "description": "Verify the page visually switches to dark mode (dark background applied)" },
+      { "type": "assertion", "description": "Verify that localStorage key 'samplebook_theme' is set to the value 'dark'" },
+      { "type": "action", "description": "Reload the page" },
+      { "type": "assertion", "description": "Verify dark mode is still active after the page reload confirming persistence" }
+    ]
+  }
+]

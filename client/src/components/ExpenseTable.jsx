@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, Filter, ChevronLeft, ChevronRight, MessageCircle, Globe, FileText, ArrowUpDown } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, MessageCircle, Globe, FileText, ArrowUpDown, Trash2, AlertTriangle } from 'lucide-react';
 import { formatDistanceToNow, format } from 'date-fns';
 import { formatCurrency } from '../lib/formatCurrency';
 import { getEmoji, getAllCategories } from '../lib/categoryEmoji';
@@ -88,6 +88,7 @@ export default function ExpenseTable({
   onMemberFilter,
   onTypeFilter,
   onDateRangeFilter,
+  onDelete,
   members = [],
   showMember = true,
   compact = false,
@@ -101,6 +102,18 @@ export default function ExpenseTable({
   const [dateRangeOption, setDateRangeOption] = useState('all');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async (expenseId) => {
+    setDeleting(true);
+    try {
+      await onDelete?.(expenseId);
+    } finally {
+      setDeleting(false);
+      setDeleteConfirmId(null);
+    }
+  };
 
   const categories = useMemo(() => getAllCategories(), []);
 
@@ -385,6 +398,11 @@ export default function ExpenseTable({
               <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Via
               </th>
+              {onDelete && (
+                <th className="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -431,6 +449,35 @@ export default function ExpenseTable({
                 <td className="px-5 py-3.5 text-center">
                   {getSourceIcon(expense.source)}
                 </td>
+                {onDelete && (
+                  <td className="px-5 py-3.5 text-center">
+                    {deleteConfirmId === expense.id ? (
+                      <div className="inline-flex items-center gap-1.5">
+                        <button
+                          onClick={() => handleDelete(expense.id)}
+                          disabled={deleting}
+                          className="px-2.5 py-1 text-xs font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 disabled:opacity-50 transition-all"
+                        >
+                          {deleting ? '...' : 'Yes'}
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirmId(null)}
+                          className="px-2.5 py-1 text-xs font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all"
+                        >
+                          No
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setDeleteConfirmId(expense.id)}
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all duration-150"
+                        title="Delete expense"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -466,6 +513,35 @@ export default function ExpenseTable({
                 {getSourceIcon(expense.source)}
               </div>
             </div>
+            {onDelete && (
+              <div className="flex-shrink-0 ml-1">
+                {deleteConfirmId === expense.id ? (
+                  <div className="flex flex-col gap-1">
+                    <button
+                      onClick={() => handleDelete(expense.id)}
+                      disabled={deleting}
+                      className="px-2 py-0.5 text-[10px] font-bold text-white bg-red-500 rounded-md hover:bg-red-600 disabled:opacity-50"
+                    >
+                      {deleting ? '...' : 'Delete'}
+                    </button>
+                    <button
+                      onClick={() => setDeleteConfirmId(null)}
+                      className="px-2 py-0.5 text-[10px] font-bold text-gray-500 bg-gray-100 rounded-md hover:bg-gray-200"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setDeleteConfirmId(expense.id)}
+                    className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                    title="Delete expense"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

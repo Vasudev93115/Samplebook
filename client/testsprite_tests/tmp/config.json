@@ -1,0 +1,26 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:5173",
+  "executionArgs": {
+    "projectName": "samplebook",
+    "projectPath": "c:\\Users\\Hp\\OneDrive\\Desktop\\samplebook\\client",
+    "testIds": [
+      "TC031",
+      "TC032",
+      "TC033",
+      "TC034",
+      "TC035",
+      "TC036",
+      "TC037",
+      "TC038"
+    ],
+    "additionalInstruction": "App runs at http://localhost:5173. It is a React SPA with React Router. Footer is at the bottom of the landing page (/). Static pages: /privacy, /terms, /contact. Login page has a Back button (ArrowLeft icon) to return to /. After entering a phone number and clicking Get OTP, the OTP step shows 6 individual single-digit input boxes. Theme toggle button is in the top navbar — clicking it switches dark/light mode. localStorage key is 'samplebook_theme' with values 'dark' or 'light'. Unknown routes redirect back to / per App.jsx catch-all route.",
+    "serverMode": "development",
+    "envs": {
+      "API_KEY": "sk-user-yt37sIUbzx-eQpCi2OONT39nMgH1rRvL_7GuNhP83PmnXbp_gxWjgoW1vdez0iOXEer_06ll_zEtWGoBLf53uRh6yU_fQmL8aVSYkxi2ePNUz-C7MUW3rOTfdw632T-6hPI"
+    }
+  },
+  "serverPort": 54839
+}

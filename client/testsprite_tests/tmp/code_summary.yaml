@@ -1,0 +1,83 @@
+project_name: samplebook
+project_type: frontend
+framework: React (Vite)
+language: JavaScript
+styling: TailwindCSS + Custom CSS (glassmorphism)
+auth: Supabase (Phone OTP, Demo Mode)
+database: Supabase
+hosting: Firebase Hosting
+url: https://samplebook-b2c8b.web.app
+
+features:
+  - name: Landing Page
+    route: /
+    description: Hero section with CTA buttons, pricing plans (Free/Pro/Enterprise), features section, testimonials, FAQ, footer with nav links (Privacy, Terms, Contact)
+  - name: Login Page
+    route: /login
+    description: Phone number input, OTP verification (6-digit), profile setup step, demo mode login, back to home navigation
+  - name: Admin Dashboard
+    route: /dashboard
+    description: Protected route. Shows summary cards (Cash-In, Cash-Out, Net Balance, Highest Spender), spending trend chart, category donut chart, member list with progress bars, expense table, group management
+  - name: Member Dashboard
+    route: /member
+    description: Protected route. Shows personal expense summary, group ledger, add expense form
+  - name: Onboarding
+    route: /onboarding
+    description: Protected route. Group creation or join via invite code
+  - name: Privacy Policy
+    route: /privacy
+    description: Static privacy policy page
+  - name: Terms of Service
+    route: /terms
+    description: Static terms of service page
+  - name: Contact
+    route: /contact
+    description: Contact support form
+
+auth_flow:
+  - User enters phone number on /login
+  - OTP sent via Supabase
+  - User enters 6-digit OTP
+  - Profile setup (name, gender)
+  - If user has group: redirect to /dashboard (admin) or /member
+  - If no group: redirect to /onboarding
+  - Demo mode: instant login without real phone
+
+protected_routes:
+  - /dashboard
+  - /member
+  - /onboarding
+
+public_routes:
+  - /
+  - /login
+  - /privacy
+  - /terms
+  - /contact
+
+theme:
+  - Toggle stored in localStorage key: samplebook_theme
+  - Values: dark / light
+  - Applied as class on document.documentElement
+
+tech_stack:
+  - React 18
+  - React Router v6
+  - Vite
+  - Supabase JS Client
+  - TailwindCSS
+  - Lucide React Icons
+  - Recharts (charts)
+  - Firebase Hosting
+
+key_ui_elements:
+  - Glassmorphic cards with emerald green borders
+  - Dark/light theme toggle button
+  - Phone OTP login form
+  - 6-digit OTP input boxes
+  - Pricing plan cards (Free, Pro, Enterprise)
+  - Expense summary stat cards
+  - Line chart for spending trends
+  - Donut chart for category breakdown
+  - Member list with avatar and progress bars
+  - Footer links: Privacy, Terms, Contact

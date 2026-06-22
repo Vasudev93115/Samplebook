@@ -8,6 +8,7 @@ const { handleText } = require('./handlers/textHandler');
 const { handleImage } = require('./handlers/imageHandler');
 const { handleAudio } = require('./handlers/audioHandler');
 const { handleReport } = require('./handlers/reportHandler');
+const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://samplebook-b2c8b.web.app';
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -16,7 +17,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // Enable CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
@@ -88,10 +89,10 @@ app.post('/webhook', (req, res) => {
       const group = await getUserGroup(user.id);
       if (!group) {
         await sendMessage(from,
-          '👋 Welcome to SampleBook!\n\n' +
-          'You need to join a group first.\n' +
-          'Ask your admin to invite you.\n\n' +
-          'Reply *help* for instructions.');
+          '👋 Hey there! Welcome to *SampleBook* — your smart expense tracker! 💰\n\n' +
+          'You\'re almost ready to start tracking.\n' +
+          '📩 Ask your group admin to send you an invite link to get started.\n\n' +
+          'Need help? Just reply *help* anytime! 🙌');
         return;
       }
 
@@ -106,8 +107,10 @@ app.post('/webhook', (req, res) => {
         const result = await deleteLastExpense(user.id);
         if (result.success) {
           const sym = currencySymbol[group.currency] || group.currency || '₹';
-          reply = `🗑️ *Expense Deleted Successfully!*\n\n` +
-            `Removed: *${sym}${result.expense.amount}* for *${result.expense.category}* (${result.expense.description})`;
+          reply = `🗑️ *Done! Expense Removed*\n\n` +
+            `❌ *${sym}${result.expense.amount}* — ${result.expense.category}\n` +
+            `📝 ${result.expense.description}\n\n` +
+            `_Send a new message to log another expense._`;
         } else if (result.reason === 'no_expense') {
           reply = '❓ *No recent expenses found to delete.*';
         } else {
@@ -115,15 +118,16 @@ app.post('/webhook', (req, res) => {
         }
       }
       else if (detected === 'help') {
-        reply = '🤖 *SampleBook Help*\n\n' +
-          '*Log expenses by sending:*\n' +
-          '💬 Text: *200 sabzi* or *500 petrol*\n' +
-          '📷 Photo: receipt or bill\n' +
-          '📱 Screenshot: UPI payment\n\n' +
-          '*Commands:*\n' +
-          '• *report* — monthly summary\n' +
-          '• *delete* — delete last entry\n' +
-          '• *help* — this message';
+        reply = '📖 *SampleBook — Command Guide*\n\n' +
+          '💬 *Log Expenses:*\n' +
+          '• Type: *200 sabzi* or *chai 50*\n' +
+          '• 📷 Send a receipt photo\n' +
+          '• 🎙️ Send a voice note\n\n' +
+          '📋 *Commands:*\n' +
+          '• *report* — your monthly summary 📊\n' +
+          '• *delete* — undo last expense 🗑️\n' +
+          '• *help* — this guide 💡\n\n' +
+          `📊 *Dashboard:* ${DASHBOARD_URL}`;
       }
       else if (detected === 'image') {
         await sendMessage(from, '⏳ Scanning your receipt...');
@@ -314,19 +318,95 @@ app.post('/api/welcome-user', async (req, res) => {
     
     console.log(`[${new Date().toISOString()}] Dispatching Welcome WhatsApp message to ${phone}`);
     
-    const welcomeMessage = `🎉 *Welcome to SampleBook, ${name}!* \n\n` +
-      `Your account is fully set up!\n` +
-      `🔗 *Access your dashboard anytime:* https://samplebook-b2c8b.web.app/\n\n` +
-      `*How to track cash expenses in this chat:*\n` +
-      `💬 *Text:* Send *"200 petrol"* or *"150 auto"*\n` +
-      `📷 *Photo:* Snap and send a shop receipt or UPI screenshot\n` +
-      `🎙️ *Voice Note:* Send a voice note describing your expense!\n\n` +
-      `Reply *help* at any time to view all options. Let's start tracking! 🚀`;
+    const welcomeMessage = `🎉 *Welcome aboard, ${name}!* You're all set! ✨\n\n` +
+      `📊 *Your Dashboard:* ${DASHBOARD_URL}\n` +
+      `Track all your expenses, view reports & export data anytime.\n\n` +
+      `*Quick Start — Send expenses right here:*\n` +
+      `💬 Type: *"200 petrol"* or *"chai 50"*\n` +
+      `📷 Photo: Snap a receipt or UPI screenshot\n` +
+      `🎙️ Voice: Record a voice note — *"spent 300 on groceries"*\n\n` +
+      `Reply *report* for your monthly summary 📈\n` +
+      `Reply *help* for all commands 💡\n\n` +
+      `Happy tracking! 🚀`;
       
     await sendMessage(phone, welcomeMessage);
     res.status(200).json({});
   } catch (err) {
     console.error('Welcome WhatsApp API error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// OTP verification success — sends a WhatsApp confirmation with dashboard link
+app.post('/api/otp-verified', async (req, res) => {
+  try {
+    const { phone, name } = req.body;
+    if (!phone) {
+      return res.status(400).json({ error: 'Missing phone parameter' });
+    }
+
+    const cleanPhone = phone.replace(/^\+/, '').replace(/\s/g, '').trim();
+    const displayName = name || 'there';
+
+    console.log(`[${new Date().toISOString()}] OTP verified for ${cleanPhone}, sending confirmation`);
+
+    const verifiedMessage = `✅ *Login Successful!* 🔐\n\n` +
+      `Hey ${displayName}, you've been verified successfully.\n\n` +
+      `📊 *Open your dashboard:* ${DASHBOARD_URL}\n\n` +
+      `You can also track expenses right here in WhatsApp!\n` +
+      `Reply *help* to see all commands. 💡`;
+
+    await sendMessage(cleanPhone, verifiedMessage);
+    res.status(200).json({});
+  } catch (err) {
+    console.error('OTP verified WhatsApp API error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Delete expense by ID (admin dashboard) — uses service role to bypass RLS
+app.delete('/api/expense/:id', async (req, res) => {
+  try {
+    const expenseId = req.params.id;
+    if (!expenseId) {
+      return res.status(400).json({ error: 'Missing expense ID' });
+    }
+
+    console.log(`[${new Date().toISOString()}] Dashboard delete request for expense: ${expenseId}`);
+
+    const { supabase } = require('./services/supabase');
+
+    // First verify the expense exists
+    const { data: existing, error: findError } = await supabase
+      .from('expenses')
+      .select('id, amount, category, description')
+      .eq('id', expenseId)
+      .maybeSingle();
+
+    if (findError) {
+      console.error('Error finding expense:', findError.message);
+      return res.status(500).json({ error: findError.message });
+    }
+
+    if (!existing) {
+      return res.status(404).json({ error: 'Expense not found' });
+    }
+
+    // Delete the expense
+    const { error: deleteError } = await supabase
+      .from('expenses')
+      .delete()
+      .eq('id', expenseId);
+
+    if (deleteError) {
+      console.error('Error deleting expense:', deleteError.message);
+      return res.status(500).json({ error: deleteError.message });
+    }
+
+    console.log(`[${new Date().toISOString()}] Expense deleted: ${expenseId} (${existing.category}: ${existing.amount})`);
+    res.status(200).json({ success: true, deleted: existing });
+  } catch (err) {
+    console.error('Delete expense error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });

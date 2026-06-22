@@ -1,5 +1,6 @@
 const { getMonthlyExpenses } = require('../services/supabase');
 const { formatCurrency } = require('../utils/formatCurrency');
+const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://samplebook-b2c8b.web.app';
 
 const categoryEmoji = {
   'Groceries': '🛒',
@@ -47,7 +48,7 @@ async function handleReport(group, user, currency) {
       report += `${emoji} ${cat}: ${formatCurrency(amt, currency || 'INR')}\n`;
     }
 
-    report += `\n_View full details on your dashboard_`;
+    report += `\n📊 *Full Dashboard:* ${DASHBOARD_URL}\n_View detailed charts, export CSV & more!_`;
     return report;
   } catch (err) {
     console.error('handleReport error:', err.message);

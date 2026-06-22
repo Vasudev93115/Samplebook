@@ -1,0 +1,18 @@
+{
+  "status": "init",
+  "executionArgs": {
+    "projectName": "samplebook",
+    "projectPath": "c:\\Users\\Hp\\OneDrive\\Desktop\\samplebook\\client",
+    "testIds": [
+      "TC002",
+      "TC003",
+      "TC004",
+      "TC015",
+      "TC020"
+    ],
+    "additionalInstruction": "The app uses Phone OTP login via Supabase. For demo mode testing, look for a 'Try Demo' or 'Demo Mode' button on the login page. The app runs on http://localhost:5173. Protected routes redirect to /login. Theme toggle button should be visible in the navbar. Pricing section is on the landing page at /.",
+    "serverMode": "development",
+    "localUrl": "http://localhost:5173",
+    "envs": {}
+  }
+}

@@ -198,6 +198,23 @@ export default function Login() {
           if (dbUser && dbUser.name && dbUser.name !== 'Friend') {
             // User already exists and has a set profile name, skip profile setup!
             setProfileSetupStep(false);
+            // Send OTP verification success message via WhatsApp (non-blocking)
+            try {
+              const getBackendUrl = () => {
+                const envUrl = import.meta.env.VITE_APP_URL;
+                if (envUrl && !envUrl.includes('5173')) return envUrl;
+                const host = window.location.hostname;
+                const protocol = window.location.protocol;
+                return `${protocol}//${host}:3000`;
+              };
+              const cleanPhone = phone.replace(/\s/g, '');
+              const fullPhoneClean = '91' + cleanPhone.replace(/^\+91/, '');
+              fetch(`${getBackendUrl()}/api/otp-verified`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: fullPhoneClean, name: dbUser.name })
+              }).catch(() => {});
+            } catch (e) { /* non-blocking */ }
           } else {
             setProfileSetupStep(true);
           }

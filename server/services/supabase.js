@@ -154,6 +154,39 @@ async function deleteLastExpense(userId) {
   }
 }
 
+async function getInactiveUsers(days = 3) {
+  try {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+
+    // 1. Get all users
+    const { data: users, error: uErr } = await supabase.from('users').select('id, phone, name');
+    if (uErr) {
+      console.error('Error fetching users:', uErr.message);
+      return [];
+    }
+
+    // 2. Get users who made an expense recently
+    const { data: activeExpenses, error: eErr } = await supabase
+      .from('expenses')
+      .select('user_id')
+      .gte('created_at', cutoff.toISOString());
+      
+    if (eErr) {
+      console.error('Error fetching active expenses:', eErr.message);
+      return [];
+    }
+      
+    const activeUserIds = new Set(activeExpenses.map(e => e.user_id));
+    
+    // 3. Filter for inactive users
+    return users.filter(u => !activeUserIds.has(u.id));
+  } catch (err) {
+    console.error('getInactiveUsers exception:', err.message);
+    return [];
+  }
+}
+
 module.exports = {
   supabase,
   getUserByPhone,
@@ -161,5 +194,6 @@ module.exports = {
   getUserGroup,
   saveExpense,
   getMonthlyExpenses,
-  deleteLastExpense
+  deleteLastExpense,
+  getInactiveUsers
 };

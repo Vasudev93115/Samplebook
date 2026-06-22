@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const { getUserByPhone, createUser, getUserGroup, deleteLastExpense } = require('./services/supabase');
+const { getUserByPhone, createUser, getUserGroup, deleteLastExpense, getInactiveUsers } = require('./services/supabase');
 const { sendMessage } = require('./services/meta');
 const { detectMessageType } = require('./utils/detectType');
 const { currencySymbol } = require('./utils/formatCurrency');
@@ -598,4 +598,39 @@ app.get('/health', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ SampleBook server running on port ${PORT}`);
+  
+  // Start daily inactivity reminder loop (runs every 24 hours)
+  const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+  setInterval(async () => {
+    try {
+      console.log(`[${new Date().toISOString()}] Running daily inactivity reminder check...`);
+      const inactiveUsers = await getInactiveUsers(3); // 3 days inactive
+      
+      if (!inactiveUsers || inactiveUsers.length === 0) {
+        console.log('No inactive users found for reminders.');
+        return;
+      }
+      
+      console.log(`Found ${inactiveUsers.length} inactive users. Sending WhatsApp reminders...`);
+      let sentCount = 0;
+      
+      for (const user of inactiveUsers) {
+        if (!user.phone) continue;
+        
+        const cleanPhone = user.phone.replace(/^\+/, '').replace(/\s/g, '').trim();
+        const msg = `👋 *Hey ${user.name}!* \n\nWe noticed you haven't logged any expenses in the last 3 days.\n\n` +
+          `Stay on top of your budget! Reply with a quick message (e.g. *"200 coffee"*), or snap a photo of a receipt. 📸\n\n` +
+          `_You can also reply *report* to see your monthly summary._ 📊`;
+          
+        await sendMessage(cleanPhone, msg);
+        sentCount++;
+        
+        // Add a small delay between messages to avoid Meta rate limits
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      console.log(`Successfully sent ${sentCount} reminder messages.`);
+    } catch (err) {
+      console.error('Error in daily reminder loop:', err.message);
+    }
+  }, TWENTY_FOUR_HOURS);
 });

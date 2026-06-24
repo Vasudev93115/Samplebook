@@ -201,7 +201,7 @@ export default function MemberCard({
                 <div className="flex flex-col items-center justify-center py-12 text-center">
                   <Calendar size={32} className="text-gray-200 dark:text-slate-700 mb-3" />
                   <p className="text-sm text-gray-500 dark:text-slate-400">
-                    No expenses {activeMonthTab === 'this' ? 'this month' : 'last month'}
+                    No transactions {activeMonthTab === 'this' ? 'this month' : 'last month'}
                   </p>
                 </div>
               ) : (
@@ -215,7 +215,7 @@ export default function MemberCard({
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                        {expense.description || 'Expense'}
+                        {expense.description || 'Transaction'}
                       </p>
                       <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">
                         {expense.created_at
@@ -223,28 +223,55 @@ export default function MemberCard({
                           : '—'}
                       </p>
                     </div>
-                    <span className="text-sm font-semibold text-gray-900 dark:text-white flex-shrink-0">
-                      {formatCurrency(expense.amount, currency)}
+                    <span className={`text-sm font-semibold flex-shrink-0 ${
+                      expense.transaction_type === 'credit' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white'
+                    }`}>
+                      {expense.transaction_type === 'credit' ? '+ ' : ''}{formatCurrency(expense.amount, currency)}
                     </span>
                   </div>
                 ))
               )}
             </div>
 
-            {/* Panel Footer */}
-            <div className="border-t border-gray-100 dark:border-slate-800 px-6 py-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500 dark:text-slate-400">
-                  {activeMonthTab === 'this' ? 'This month' : 'Last month'} total
-                </span>
-                <span className="text-lg font-bold text-gray-900 dark:text-white">
-                  {formatCurrency(
-                    filteredExpenses.reduce((sum, e) => sum + (e.amount || 0), 0),
-                    currency
-                  )}
-                </span>
-              </div>
-            </div>
+            {/* Panel Footer with detailed calculations */}
+            {(() => {
+              const spentTotal = filteredExpenses
+                .filter(e => e.transaction_type !== 'credit')
+                .reduce((sum, e) => sum + Number(e.amount || 0), 0);
+
+              const receivedTotal = filteredExpenses
+                .filter(e => e.transaction_type === 'credit')
+                .reduce((sum, e) => sum + Number(e.amount || 0), 0);
+
+              const netVal = receivedTotal - spentTotal;
+
+              return (
+                <div className="border-t border-gray-100 dark:border-slate-800 px-6 py-4 bg-gray-50/50 dark:bg-slate-900/50 space-y-2.5">
+                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-slate-400">
+                    <span>Total Spent (Cash-Out)</span>
+                    <span className="font-semibold text-rose-600 dark:text-rose-400">
+                      {formatCurrency(spentTotal, currency)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-slate-400">
+                    <span>Total Cash-In (Income)</span>
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                      {formatCurrency(receivedTotal, currency)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pt-2.5 border-t border-gray-100 dark:border-slate-800">
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">
+                      Net Balance
+                    </span>
+                    <span className={`text-base font-bold ${
+                      netVal >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                    }`}>
+                      {netVal >= 0 ? '+' : ''}{formatCurrency(netVal, currency)}
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}

@@ -1337,7 +1337,8 @@ function AdminDashboardView({
         demoMode={demoMode}
         onAdd={(data) => {
           onAddExpense?.(data);
-          toast.addToast(`Expense of ${formatCurrency(data.amount, currency)} added successfully!`);
+          const isCredit = data.transaction_type === 'credit';
+          toast.addToast(`${isCredit ? 'Income' : 'Expense'} of ${formatCurrency(data.amount, currency)} added successfully!`);
         }}
       />
     </div>

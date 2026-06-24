@@ -297,7 +297,7 @@ export default function AddExpenseModal({ open, onClose, onAdd, members = [], cu
               onClick={() => setTransactionType('debit')}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
                 transactionType === 'debit'
-                  ? 'bg-emerald-600 text-white shadow-sm'
+                  ? 'bg-rose-600 text-white shadow-sm'
                   : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >

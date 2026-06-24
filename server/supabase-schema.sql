@@ -55,6 +55,7 @@ create table expenses (
   vendor text,
   description text,
   input_type text default 'text' check (input_type in ('text', 'image', 'audio')),
+  transaction_type text default 'debit' check (transaction_type in ('debit', 'credit')),
   confidence decimal(3,2),
   created_at timestamptz default now()
 );
